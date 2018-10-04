@@ -1,4 +1,4 @@
-package com.jobsolutions_app;
+package com.thanhlee.jobsolutions;
 
 import android.app.Application;
 

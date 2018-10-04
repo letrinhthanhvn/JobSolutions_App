@@ -1,11 +1,11 @@
 # Uncomment the next line to define a global platform for your project
 # platform :ios, '9.0'
 
-target 'JobSolutions_App' do
+target 'JobSolutions' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   # use_frameworks!
 
-  # Pods for JobSolutions_App
+  # Pods for JobSolutions
 
   pod 'react-native-material-kit', :path => '../node_modules/react-native-material-kit'
 
@@ -13,20 +13,20 @@ target 'JobSolutions_App' do
 
   pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
 
-  target 'JobSolutions_AppTests' do
+  target 'JobSolutionsTests' do
     inherit! :search_paths
     # Pods for testing
   end
 
 end
 
-target 'JobSolutions_App-tvOS' do
+target 'JobSolutions-tvOS' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   # use_frameworks!
 
-  # Pods for JobSolutions_App-tvOS
+  # Pods for JobSolutions-tvOS
 
-  target 'JobSolutions_App-tvOSTests' do
+  target 'JobSolutions-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

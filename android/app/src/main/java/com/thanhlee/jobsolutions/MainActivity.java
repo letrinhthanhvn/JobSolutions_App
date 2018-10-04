@@ -1,4 +1,4 @@
-package com.jobsolutions_app;
+package com.thanhlee.jobsolutions;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "JobSolutions_App";
+        return "JobSolutions";
     }
 }
