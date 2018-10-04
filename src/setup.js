@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 
 import {
-
+   View,
+   StatusBar
 } from 'react-native';
 
 import { Provider } from 'react-redux';
@@ -11,11 +12,11 @@ import configureStore from './redux/configureStore';
 export default class Setup extends PureComponent {
    constructor(props) {
       super(props);
-   
+
       this.state = {
          // isLoading: true,
          store: configureStore(() => {
-
+            
          })
       }
    }
@@ -28,9 +29,12 @@ export default class Setup extends PureComponent {
       // }
 
       return (
-         <Provider store={store}>
-            <App />
-         </Provider>
+         <View style={{ flex: 1 }}>
+            <StatusBar hidden/>
+            <Provider store={store}>
+               <App />
+            </Provider>
+         </View>
       );
    }
 }

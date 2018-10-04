@@ -8,12 +8,14 @@
 
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
+import NavigatorMobile from './src/navigator/NavigatorMobile';
+import { connect } from 'react-redux';
 
-export default class App extends Component {
+class App extends Component {
    render() {
       return (
          <View style={styles.container}>
-            <Text style={styles.welcome}>Welcome to React Native!</Text>
+            <NavigatorMobile />
          </View>
       );
    }
@@ -21,10 +23,7 @@ export default class App extends Component {
 
 const styles = StyleSheet.create({
    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#F5FCFF',
+      flex: 1
    },
    welcome: {
       fontSize: 20,
@@ -37,3 +36,14 @@ const styles = StyleSheet.create({
       marginBottom: 5,
    },
 });
+
+const mapDispatchToProps = {
+};
+
+const mapStateToProps = (state) => {
+   return {
+
+   }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)

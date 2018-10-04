@@ -26,11 +26,11 @@ const store = createStore(
    )
 );
 
-export default configureStore = (onCompletion) => {
+export default configureStore = (onCompletion = () => { }) => {
    persistStore(
       store,
       undefined,
-      onCompletion || (() => {})
+      onCompletion 
    );
 
    sagaMiddleware.run(sagas);
