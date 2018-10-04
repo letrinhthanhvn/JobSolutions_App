@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import ListField from '../screens/listField';
 import TabBarIcon from '../components/TabBarIcon';
 import ListJobs from '../screens/listJobs';
+import JobDetail from '../screens/jobDetail';
 class NavigatorMobile extends PureComponent {
    render() {
       return (
@@ -59,6 +60,12 @@ class NavigatorMobile extends PureComponent {
                   <Scene
                      key='listJobs'
                      component={ListJobs}
+                     swipeEnabled={false}
+                     panHandlers={null}
+                  />
+                  <Scene
+                     key='jobDetail'
+                     component={JobDetail}
                      swipeEnabled={false}
                      panHandlers={null}
                   />

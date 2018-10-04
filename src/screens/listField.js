@@ -24,11 +24,10 @@ const data = [
 
 class ListField extends PureComponent {
 
-
    renderField = ({ item, index }) => {
       return (
          <TouchableOpacity style={styles.btnStyle}
-            onPress={() => Actions.listJobs()}
+            onPress={() => Actions.listJobs({ id: item.id, fieldName: item.field })}
          >
             <Text style={styles.textPerField}>{item.field}</Text>
          </TouchableOpacity>
