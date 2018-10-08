@@ -31,10 +31,10 @@ class ListJobs extends PureComponent {
          >
             <Text style={[styles.textPerField, { color: '#429ef4', fontWeight: 'bold', width: '75%' }]} numberOfLines={1}>{item.jobName}</Text>
             <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.7)', fontWeight: 'bold', fontSize: 18 }]}>{item.companyName}</Text>
-            <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.4)', width: '75%', fontSize: 18 }]} numberOfLines={1}>{item.address}</Text>
+            <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.5)', width: '75%', fontSize: 18 }]} numberOfLines={1}>{item.address}</Text>
             <View style={{ width: '100%', height: 40, justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', paddingRight: 10 }}>
-               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.4)', fontSize: 18 }]}>Salary: {item.address}</Text>
-               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.4)', fontSize: 18 }]}>Posted: {item.posted}</Text>
+               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.5)', fontSize: 18 }]}>Salary: {item.address}</Text>
+               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.5)', fontSize: 18 }]}>Posted: {item.posted}</Text>
             </View>
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 1)', fontSize: 18 }]}>Danh gia: 4.7/5</Text>
@@ -128,12 +128,12 @@ const data = [
    {
       id: 2, infor: [
          { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
+         { id: 1, jobName: 'Web Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
+         { id: 1, jobName: 'Android Developers', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
+         { id: 1, jobName: '.Net/C# Developers', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
+         { id: 1, jobName: 'Mobile Developers', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
+         { id: 1, jobName: 'Front-end Developers', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
+         { id: 1, jobName: 'React-Native Developers', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
 
       ]
    },

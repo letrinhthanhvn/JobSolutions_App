@@ -3,56 +3,51 @@ import { Scene, Router, Tabs, Stack, Actions } from 'react-native-router-flux';
 import { transitionConfig, getSceneStyle } from '../common/transitionConfig';
 import { connect } from 'react-redux';
 import ListField from '../screens/listField';
-import TabBarIcon from '../components/TabBarIcon';
 import ListJobs from '../screens/listJobs';
 import JobDetail from '../screens/jobDetail';
+import {
+   View
+} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Drawer from '../components/Drawer';
+
+
+
+const TabBarIcon = ({ isFocused, iconName }) => {
+   var color = isFocused ? 'white' : 'rgba(255, 255, 255, 0.4)';
+   return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+         <Icon style={{ color: color }} name={iconName} size={24} />
+      </View>
+   );
+}
+
+const MenuIcon = () => {
+   return (
+         <Icon color='black' name='menu' size={24} />
+   );
+}
+
 class NavigatorMobile extends PureComponent {
    render() {
       return (
          <Router getSceneStyle={getSceneStyle}>
-            <Tabs
+            <Scene
                key='root'
                transitionConfig={transitionConfig}
-               // tabs={true} 
-               showLabel={false}
-               activeBackgroundColor='#242843'
-               inactiveBackgroundColor='#242843'
-               activeTintColor='white'
-               inactiveTintColor='rgba(255, 255, 255, 0.4)'
             >
-
-               {/* <Tabs
-                  key="tabbar"
-                  showLabel
-                  hideNavBar
-                  tabBarPosition="bottom"
-                  tabBarComponent={(props) => {
-                     return (
-                        <TabBar
-                           {...props}
-                           backgroundColor='#242843'
-                           colorIconActive='#fff'
-                           colorIconInactive="rgba(255, 255, 255, 0.4)"
-                        />
-                     )
-                  }
-                  }
-                  activeTintColor='#fff'
-                  inactiveTintColor="rgba(255, 255, 255, 0.4)"
-                  transitionConfig={transitionConfig}
-                  swipeEnabled={false}
-                  panHandlers={null}
-               > */}
-
-               <Stack
-                  key="Home"
+               <Scene
+                  key="tab1"
                   hideNavBar
                   transitionConfig={transitionConfig}
-                  iconName="home"
-                  icon={TabBarIcon}
+                  // drawer
+                  // drawerIcon={MenuIcon}
+                  // contentComponent={Drawer}
+                  // drawerWidth={300}
                >
                   <Scene
                      key='listField'
+                     title='Categories'
                      component={ListField}
                      swipeEnabled={false}
                      panHandlers={null}
@@ -62,32 +57,17 @@ class NavigatorMobile extends PureComponent {
                      component={ListJobs}
                      swipeEnabled={false}
                      panHandlers={null}
+                     hideNavBar
                   />
                   <Scene
                      key='jobDetail'
                      component={JobDetail}
                      swipeEnabled={false}
                      panHandlers={null}
+                     // initial
                   />
-               </Stack>
-
-               <Stack
-                  key="tab_2"
-                  title='Hello'
-                  hideNavBar
-                  transitionConfig={transitionConfig}
-                  iconName="save"
-                  icon={TabBarIcon}
-               >
-                  <Scene
-                     key='listField'
-                     component={ListField}
-                     swipeEnabled={false}
-                     panHandlers={null}
-                  />
-               </Stack>
-               {/* </Tabs> */}
-            </Tabs>
+               </Scene>
+            </Scene>
          </Router>
       )
    }

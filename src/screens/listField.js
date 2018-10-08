@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import HeaderMain from '../components/headerMain';
 const data = [
    { id: 1, field: 'CNTT - Phan mem' },
    { id: 2, field: 'CNTT - Phan cung / Mang' },
@@ -37,9 +38,7 @@ class ListField extends PureComponent {
    render() {
       return (
          <View style={{ flex: 1 }}>
-            <View style={styles.headerTop}>
-               <Text style={{ fontSize: 20, color: 'white', fontWeight: 'bold' }}>CATEGORIES</Text>
-            </View>
+            <HeaderMain title='Categories'/>
             <FlatList
                data={data}
                renderItem={this.renderField}
