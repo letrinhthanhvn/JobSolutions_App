@@ -10,8 +10,10 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Drawer from '../components/Drawer';
-
-
+import LoginSelector from '../container/jobSolutions/index';
+import SavedCompany from '../screens/savedCompany';
+import CompanyDetail from '../screens/companyDetail';
+import SavedJobs from '../screens/savedJobs';
 
 const TabBarIcon = ({ isFocused, iconName }) => {
    var color = isFocused ? 'white' : 'rgba(255, 255, 255, 0.4)';
@@ -24,7 +26,7 @@ const TabBarIcon = ({ isFocused, iconName }) => {
 
 const MenuIcon = () => {
    return (
-         <Icon color='black' name='menu' size={24} />
+      <Icon color='black' name='menu' size={24} />
    );
 }
 
@@ -40,17 +42,26 @@ class NavigatorMobile extends PureComponent {
                   key="tab1"
                   hideNavBar
                   transitionConfig={transitionConfig}
-                  // drawer
-                  // drawerIcon={MenuIcon}
-                  // contentComponent={Drawer}
-                  // drawerWidth={300}
+                  initial
+               // drawer
+               // drawerIcon={MenuIcon}
+               // contentComponent={Drawer}
+               // drawerWidth={300}
                >
+                  <Scene
+                     key='loginSelector'
+                     component={LoginSelector}
+                     swipeEnabled={false}
+                     panHandlers={null}
+                     // initial
+                  />
                   <Scene
                      key='listField'
                      title='Categories'
                      component={ListField}
                      swipeEnabled={false}
                      panHandlers={null}
+                     initial
                   />
                   <Scene
                      key='listJobs'
@@ -64,7 +75,28 @@ class NavigatorMobile extends PureComponent {
                      component={JobDetail}
                      swipeEnabled={false}
                      panHandlers={null}
-                     // initial
+                  // initial
+                  />
+                  <Scene
+                     key='savedCompany'
+                     component={SavedCompany}
+                     swipeEnabled={false}
+                     panHandlers={null}
+                  // initial
+                  />
+                  <Scene
+                     key='companyDetail'
+                     component={CompanyDetail}
+                     swipeEnabled={false}
+                     panHandlers={null}
+                  //    initial
+                  />
+                  <Scene
+                     key='savedJobs'
+                     component={SavedJobs}
+                     swipeEnabled={false}
+                     panHandlers={null}
+                  //    initßial
                   />
                </Scene>
             </Scene>

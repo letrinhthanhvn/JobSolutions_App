@@ -36,6 +36,7 @@ class ListField extends PureComponent {
    }
 
    render() {
+      console.log('ListField', this.props)
       return (
          <View style={{ flex: 1 }}>
             <HeaderMain title='Categories'/>
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
    headerTop: {
       width: '100%',
       height: 50,
-      backgroundColor: '#242843',
+      backgroundColor: '#9AC230',
       alignItems: 'center',
       justifyContent: 'center'
    },

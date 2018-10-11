@@ -169,7 +169,7 @@ class JobDetail extends PureComponent {
    render() {
       return (
          <View style={styles.container}>
-            <Header title='Job Detail' />
+            <Header title='Job Detail' viewRight={true}/>
             <ScrollView style={{ flex: 1 }}>
                {
                   this.renderJobName()
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
    headerTop: {
       width: '100%',
       height: 50,
-      backgroundColor: '#242843',
+      backgroundColor: '#9AC230',
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center'

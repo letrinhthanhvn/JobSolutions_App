@@ -1,4 +1,3 @@
-
-
-
-export const FETCH_LIST_SONGS = "FETCH_LIST_SONGS";
+export const LOGIN = "LOGIN";
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_FAILED = "LOGIN_FAILED";

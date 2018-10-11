@@ -13,7 +13,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 export default class Header extends PureComponent {
    render() {
 
-      const { title, rightIcon } = this.props
+      const { title, rightIcon, viewRight } = this.props
 
       return (
          <View style={styles.container}>
@@ -24,7 +24,7 @@ export default class Header extends PureComponent {
             {
                rightIcon ? <ButtonIcon iconName={rightIcon} size={24} color='white'
                   style={{ position: 'absolute', right: 10, }}
-               /> : <View></View>
+               /> : viewRight ? <View style={{ width: 45, height: 45 }}></View> : null
             }
          </View>
       )
@@ -35,9 +35,10 @@ const styles = StyleSheet.create({
    container: {
       width: SCREEN_WIDTH,
       height: 50,
-      backgroundColor: '#242843',
+      backgroundColor: '#9AC230',
       flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'space-between'
    },
 
    textStyle: {

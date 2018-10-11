@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      backgroundColor: '#242843'
+      backgroundColor: '#9AC230'
    },
 
    leftIconHeader: {
@@ -96,7 +96,8 @@ const styles = StyleSheet.create({
    },
 
    viewRight: {
-      flexDirection: 'row',
+      width: 40,
+      height: 40
       // position: 'absolute',
       // right: 15
    },

@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import ButtonIcon from '../components/ButtonIcon';
 import { Actions } from 'react-native-router-flux';
 
-class ListJobs extends PureComponent {
+class SavedJobs extends PureComponent {
 
    constructor(props) {
       super(props)
@@ -19,7 +19,7 @@ class ListJobs extends PureComponent {
    renderField = ({ item, index }) => {
       return (
          <TouchableOpacity style={styles.rowStyle}
-            onPress={this.onPressJob}
+            onPress={() => Actions.jobDetail()}
          >
             <View>
                <Text style={[styles.textPerField, { color: '#429ef4', fontWeight: 'bold', width: '75%' }]} numberOfLines={1}>{item.jobName}</Text>
@@ -49,7 +49,7 @@ class ListJobs extends PureComponent {
                size={24}
                onPress={() => Actions.pop()}
             />
-            <Text style={styles.textPerField}>{this.props.fieldName}</Text>
+            <Text style={styles.textPerField}>Saved Jobs</Text>
             <View style={{ width: 45, height: 45 }}></View>
          </View>
 
@@ -57,7 +57,6 @@ class ListJobs extends PureComponent {
    }
 
    render() {
-      console.log('ListJobs"::::::', this.props)
       return (
          <View style={{ flex: 1 }}>
             {
@@ -71,14 +70,6 @@ class ListJobs extends PureComponent {
          </View>
       )
    }
-
-   onPressJob = () => {
-      if (this.props.userName) {
-         Actions.jobDetail()
-      } else {
-         alert('Ban chua dang nhap')
-      }
-   }
 }
 
 const styles = StyleSheet.create({
@@ -90,19 +81,16 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
       alignItems: 'center'
    },
-
    textPerField: {
       fontSize: 20,
       color: 'white'
    },
-
    rowStyle: {
       width: '100%', height: 160,
       paddingLeft: 10,
       borderBottomColor: 'rgba(0, 0, 0, 0.1)',
       borderBottomWidth: 8, paddingTop: 3
    },
-
    viewSalary: {
       width: '100%',
       height: 40,
@@ -118,11 +106,11 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state, props) => {
 
    return {
-      userName: state.jobSolutions.userName
+
    }
 }
 
-export default connect(mapStateToProps)(ListJobs)
+export default connect(mapStateToProps)(SavedJobs)
 
 const data = [
    {
