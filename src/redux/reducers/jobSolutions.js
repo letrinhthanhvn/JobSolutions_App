@@ -7,7 +7,7 @@ const initialState = {
 export default function jobSolutions(state = initialState, action) {
    switch (action.type) {
       case types.LOGIN: {
-         return state
+         return state;
       }
 
       case types.LOGIN_SUCCESS: {
@@ -16,6 +16,10 @@ export default function jobSolutions(state = initialState, action) {
          return {
             ...state, userName
          }
+      }
+
+      case types.LOGIN_FAILED: {
+         return state
       }
 
       default:

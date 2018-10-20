@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import HeaderMain from '../components/headerMain';
+import { fetchIndustry } from '../redux/actions/jobSolutions';
 const data = [
    { id: 1, field: 'CNTT - Phan mem' },
    { id: 2, field: 'CNTT - Phan cung / Mang' },
@@ -25,23 +26,38 @@ const data = [
 
 class ListField extends PureComponent {
 
+   constructor(props) {
+      super(props)
+
+      this.state = {
+         industryList: []
+      }
+   }
+
+   async componentDidMount() {
+      let res = await fetch('http://localhost:3000/industry/get_industry_list').then((res) => res.json());
+      this.setState({
+         industryList: res.result
+      })
+   }
+
    renderField = ({ item, index }) => {
       return (
          <TouchableOpacity style={styles.btnStyle}
-            onPress={() => Actions.listJobs({ id: item.id, fieldName: item.field })}
+            onPress={() => Actions.listJobs({ id: item.industry_id, fieldName: item.name })}
          >
-            <Text style={styles.textPerField}>{item.field}</Text>
+            <Text style={styles.textPerField}>{item.name}</Text>
          </TouchableOpacity>
       )
    }
 
    render() {
-      console.log('ListField', this.props)
+      const { industryList } = this.state
       return (
          <View style={{ flex: 1 }}>
             <HeaderMain title='Categories'/>
             <FlatList
-               data={data}
+               data={industryList}
                renderItem={this.renderField}
                keyExtractor={( item, index ) => String(index)}
             />
@@ -74,11 +90,14 @@ const styles = StyleSheet.create({
    }
 })
 
-const mapStateToProps = (state, props) => {
+const mapDispatchToProps = {
+   fetchIndustry
+}
 
+const mapStateToProps = (state, props) => {
    return {
 
    }
 }
 
-export default connect(mapStateToProps)(ListField)
+export default connect(mapStateToProps, mapDispatchToProps)(ListField)

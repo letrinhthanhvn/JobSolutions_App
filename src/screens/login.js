@@ -22,6 +22,7 @@ import Modal from 'react-native-modal';
 import Register from './register';
 import { createSelectorUserName } from '../container/jobSolutions/selector';
 import { login } from '../redux/actions/jobSolutions';
+import KeyboardScroll from '../components/KeyboardScroll';
 
 class Login extends PureComponent {
 
@@ -102,56 +103,58 @@ class Login extends PureComponent {
 
    render() {
       return (
-         <View style={{ flex: 1 }}>
-            <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 100 }}>
-               <Image source={require('../assets/tqb.jpg')} style={{ flex: 1, width: null, height: null }} resizeMode='cover' />
-            </View>
-            <View style={{ flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 200, backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+         <KeyboardScroll>
+            <View style={{ flex: 1 }}>
+               <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 100 }}>
+                  <Image source={require('../assets/tqb.jpg')} style={{ flex: 1, width: null, height: null }} resizeMode='cover' />
+               </View>
+               <View style={{ flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 200, backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
 
+               </View>
+               <View style={{ width: '100%', height: 250, alignItems: 'center', justifyContent: 'center', zIndex: 300 }}>
+                  <Image source={require('../assets/bachkhoa_logo.jpg')} style={{ width: 80, height: 120 }} resizeMode='cover' />
+               </View>
+               <ScrollView style={{ flex: 1, zIndex: 300, paddingTop: 50, }} scrollEnabled={false}>
+                  <View style={{ alignItems: 'center', height: 200, }}>
+                     {
+                        this.renderUserName()
+                     }
+                     {
+                        this.renderPassword()
+                     }
+                  </View>
+                  <View style={{ height: 90, alignItems: 'center', }}>
+                     <Button style={[styles.viewTxtInput, { alignItems: 'center', justifyContent: 'center', backgroundColor: '#9AC230', overflow: 'hidden' }]}
+                        onPress={this.signIn}>
+                        <Text style={{ color: "white", fontSize: 18, }}>Sign in</Text>
+                     </Button>
+                     <TouchableOpacity style={{ width: '60%', alignItems: 'center', marginTop: 15, height: 20 }}>
+                        <Text style={{ color: 'white', fontSize: 12 }}>Forgot password</Text>
+                     </TouchableOpacity>
+                  </View>
+                  <View style={styles.viewRegister}>
+                     <Text style={styles.textSmall}>Don't have an account?</Text>
+                     <TouchableOpacity style={{ height: '80%', justifyContent: 'center' }}
+                        onPress={this.signUp}
+                     >
+                        <Text style={[styles.textSmall, { fontWeight: '500' }]}> Sign up</Text>
+                     </TouchableOpacity>
+                  </View>
+               </ScrollView>
+               <Modal
+                  isVisible={this.state.isShowModal}
+                  backdropColor="black"
+                  backdropOpacity={0.6}
+                  swipeDirection={"up"}
+                  onBackdropPress={this._hideModal}
+                  style={styles.viewDrawer}
+                  onSwipe={this.hideModal}
+                  hideModalContentWhileAnimating
+               >
+                  <Register hideRegister={this.hideModal} />
+               </Modal>
             </View>
-            <View style={{ width: '100%', height: 250, alignItems: 'center', justifyContent: 'center', zIndex: 300 }}>
-               <Image source={require('../assets/bachkhoa_logo.jpg')} style={{ width: 80, height: 120 }} resizeMode='cover' />
-            </View>
-            <ScrollView style={{ flex: 1, zIndex: 300, paddingTop: 50, }} scrollEnabled={false}>
-               <View style={{ alignItems: 'center', height: 200, }}>
-                  {
-                     this.renderUserName()
-                  }
-                  {
-                     this.renderPassword()
-                  }
-               </View>
-               <View style={{ height: 90, alignItems: 'center', }}>
-                  <Button style={[styles.viewTxtInput, { alignItems: 'center', justifyContent: 'center', backgroundColor: '#9AC230', overflow: 'hidden' }]}
-                     onPress={this.signIn}>
-                     <Text style={{ color: "white", fontSize: 18, }}>Sign in</Text>
-                  </Button>
-                  <TouchableOpacity style={{ width: '60%', alignItems: 'center', marginTop: 15, height: 20 }}>
-                     <Text style={{ color: 'white', fontSize: 12 }}>Forgot password</Text>
-                  </TouchableOpacity>
-               </View>
-               <View style={styles.viewRegister}>
-                  <Text style={styles.textSmall}>Don't have an account?</Text>
-                  <TouchableOpacity style={{ height: '80%', justifyContent: 'center' }}
-                     onPress={this.signUp}
-                  >
-                     <Text style={[styles.textSmall, { fontWeight: '500' }]}> Sign up</Text>
-                  </TouchableOpacity>
-               </View>
-            </ScrollView>
-            <Modal
-               isVisible={this.state.isShowModal}
-               backdropColor="black"
-               backdropOpacity={0.6}
-               swipeDirection={"up"}
-               onBackdropPress={this._hideModal}
-               style={styles.viewDrawer}
-               onSwipe={this.hideModal}
-               hideModalContentWhileAnimating
-            >
-               <Register hideRegister={this.hideModal} />
-            </Modal>
-         </View>
+         </KeyboardScroll>
       )
    }
 

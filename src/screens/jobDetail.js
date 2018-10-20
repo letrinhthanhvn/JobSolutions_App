@@ -3,8 +3,6 @@ import React, { PureComponent } from 'react';
 import {
    View,
    Text,
-   FlatList,
-   TouchableOpacity,
    StyleSheet,
    ScrollView
 } from 'react-native';
@@ -14,7 +12,9 @@ import ButtonIcon from '../components/ButtonIcon';
 import { Actions } from 'react-native-router-flux';
 import Header from '../components/header';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Button } from 'react-native-material-kit/lib/mdl'
+import { Button } from 'react-native-material-kit/lib/mdl';
+import moment from 'moment';
+
 
 class JobDetail extends PureComponent {
 
@@ -22,8 +22,18 @@ class JobDetail extends PureComponent {
       super(props)
 
       this.state = {
-         isFollowed: false
+         isFollowed: false,
+         companyInfor: {},
+         companyUser: []
       }
+   }
+
+   async componentDidMount() {
+      let res = await fetch('http://localhost:3000/company/get_by_id/' + this.props.job.company_id_fk).then((res)=> res.json());
+      this.setState({
+         companyInfor: res.company,
+         companyUser: res.company_user
+      })
    }
 
    // renderTop = () => {
@@ -45,51 +55,59 @@ class JobDetail extends PureComponent {
    // }
 
    renderJobName = () => {
+      const { job } = this.props
+      const {  companyInfor } = this.state
       return (
          <View style={{ width: '100%', height: 85, borderBottomColor: 'rgba(0, 0, 0, 0.3)', borderBottomWidth: 1, paddingLeft: 10 }}>
             <View style={{ marginTop: 20 }}>
-               <Text style={{ fontSize: 20, fontWeight: '600', color: '#429ef4' }}>{data.nameJob}</Text>
+               <Text style={{ fontSize: 20, fontWeight: '600', color: '#429ef4' }}>{job.work_name}</Text>
             </View>
             <View style={{ marginTop: 10 }}>
-               <Text style={{ fontSize: 18, fontWeight: '600', color: 'black' }}>{data.nameCompany}</Text>
+               <Text style={{ fontSize: 18, fontWeight: '600', color: 'black' }}>{companyInfor.company_name}</Text>
             </View>
          </View>
       )
    }
 
    renderBelowJobName = () => {
+      const { job } = this.props
       return (
          <View style={{ width: '100%', paddingLeft: 7, borderBottomColor: 'rgba(0, 0, 0, 0.1)', borderBottomWidth: 10 }}>
             <View style={styles.rowInBelowJobName}>
                <Icon name='location-on' size={24} color='gray' />
-               <Text style={{ fontSize: 18, color: 'gray', paddingLeft: 10 }}>{data.address}</Text>
+               <Text style={{ fontSize: 18, color: 'rgba(0, 0, 0, 0.7)', paddingLeft: 10 }}>{job.location}</Text>
             </View>
-            <View style={styles.rowInBelowJobName}>
+            {/* <View style={styles.rowInBelowJobName}>
                <Icon name='receipt' size={24} color='gray' />
                <Text style={{ fontSize: 18, color: 'gray', paddingLeft: 10 }}>{data.fieldJob}</Text>
-            </View>
-            <View style={styles.rowInBelowJobName}>
+            </View> */}
+            {/* <View style={styles.rowInBelowJobName}>
                <Icon name='explore' size={24} color='gray' />
                <Text style={{ fontSize: 18, color: 'gray', paddingLeft: 10 }}>{data.experienced}</Text>
+            </View> */}
+            <View style={styles.rowInBelowJobName}>
+               <Icon name='attach-money' size={24} color='gray' />
+               <Text style={{ fontSize: 18, color: 'rgba(0, 0, 0, 0.7)', paddingLeft: 10 }}>Min: {job.min_salary}$</Text>
             </View>
             <View style={styles.rowInBelowJobName}>
                <Icon name='attach-money' size={24} color='gray' />
-               <Text style={{ fontSize: 18, color: 'gray', paddingLeft: 10 }}>{data.salary}</Text>
+               <Text style={{ fontSize: 18, color: 'rgba(0, 0, 0, 0.7)', paddingLeft: 10 }}>Max: {job.max_salary}$</Text>
             </View>
             <View style={styles.rowInBelowJobName}>
                <Icon name='date-range' size={24} color='gray' />
-               <Text style={{ fontSize: 18, color: 'gray', paddingLeft: 10 }}>{data.date}</Text>
+               <Text style={{ fontSize: 18, color: 'rgba(0, 0, 0, 0.7)', paddingLeft: 10 }}>{moment(job.deadline).format('YYYY-MM-DD')}</Text>
             </View>
          </View>
       )
    }
 
    renderJobDescription = () => {
+      const { job } = this.props
       return (
          <View style={{ paddingLeft: 10, marginTop: 10, }}>
             <Text style={{ fontSize: 22, fontWeight: 'bold', color: 'black' }}>Job Description</Text>
             <View style={{ marginTop: 10 }}>
-               <Text style={{ fontSize: 18, color: 'black' }}>{data.jobDescription}</Text>
+               <Text style={{ fontSize: 18, color: 'black' }}>{job.description}</Text>
             </View>
          </View>
       )
@@ -108,6 +126,7 @@ class JobDetail extends PureComponent {
    }
 
    renderMoreInfor = () => {
+      const { job } = this.props
       return (
          <View style={{ marginTop: 10, }}>
             <Text style={{ fontSize: 22, fontWeight: 'bold', color: 'black', paddingLeft: 10 }}>More Informations:</Text>
@@ -117,15 +136,15 @@ class JobDetail extends PureComponent {
             </View>
             <View style={{ flexDirection: 'row', width: '100%', height: 40, alignItems: 'center' }}>
                <Text style={{ fontSize: 18, color: 'black', paddingLeft: 10, fontWeight: '500' }}>Age: </Text>
-               <Text style={{ fontSize: 18, color: 'gray', paddingLeft: 10 }}>{data.address}</Text>
+               <Text style={{ fontSize: 18, color: 'gray', paddingLeft: 10 }}>{job.min_age} - {job.max_age}</Text>
             </View>
             <View style={{ flexDirection: 'row', width: '100%', height: 40, alignItems: 'center' }}>
                <Text style={{ fontSize: 18, color: 'black', paddingLeft: 10, fontWeight: '500' }}>Gender: </Text>
-               <Text style={{ fontSize: 18, color: 'gray', paddingLeft: 10 }}>{data.address}</Text>
+               <Text style={{ fontSize: 18, color: 'gray', paddingLeft: 10 }}>{job.gender_requirement == 2 ? 'Nam - Nữ' : job.gender_requirement == 1 ? 'Nữ' : 'Nam'}</Text>
             </View>
             <View style={{ flexDirection: 'row', width: '100%', height: 40, alignItems: 'center' }}>
                <Text style={{ fontSize: 18, color: 'black', paddingLeft: 10, fontWeight: '500' }}>Working Type: </Text>
-               <Text style={{ fontSize: 18, color: 'gray', paddingLeft: 10 }}>{data.address}</Text>
+               <Text style={{ fontSize: 18, color: 'gray', paddingLeft: 10 }}>{job.type_candidate == 4 ? 'Intern' : job.type_candidate == 3 ? 'Freelance' : job.type_candidate == 2 ? 'Part time' : 'Offical' }</Text>
             </View>
             <View style={{ height: 10, marginTop: 10, width: '100%', backgroundColor: "rgba(0, 0, 0, 0.1)" }}></View>
          </View>
@@ -133,11 +152,14 @@ class JobDetail extends PureComponent {
    }
 
    renderCompanyInfor = () => {
+      const { companyInfor } = this.state
+      const companyUserContact = this.state.companyUser.length > 0 ? this.state.companyUser[0] : {}
+      // console.log('companyUserContact', this.state.companyUser || this.)
       return (
          <View style={{ marginTop: 10 }}>
-            <Text style={{ fontSize: 22, fontWeight: 'bold', color: 'black', paddingLeft: 10 }}>More Informations:</Text>
+            <Text style={{ fontSize: 22, fontWeight: 'bold', color: 'black', paddingLeft: 10 }}>More Company Informations:</Text>
             <View style={{ marginTop: 15 }}>
-               <Text style={{ fontSize: 18, color: 'black', paddingLeft: 10, fontWeight: '500' }}>{data.nameCompany}</Text>
+               <Text style={{ fontSize: 18, color: 'black', paddingLeft: 10, fontWeight: '500' }}>{companyInfor.company_name}</Text>
                <View style={{ width: '100%', height: 60, alignItems: 'center', justifyContent: 'center', marginTop: 10,  }}>
                   <Button style={{ width: 100, height: 50, backgroundColor: 'rgba(0, 0, 0, 0.2)', alignItems: 'center', justifyContent: 'center', borderWidth: this.state.isFollowed ? 2 : 0, borderColor: this.state.isFollowed ? '#429ef4' : null, borderRadius: 5 }}
                      onPress={this.clickFollow}
@@ -148,18 +170,18 @@ class JobDetail extends PureComponent {
             </View>
             <View style={{ width: '100%', height: 50, flexDirection: 'row', marginTop: 10 }}>
                <Text style={{ fontSize: 18, color: 'black', paddingLeft: 10, fontWeight: '500' }}>Address: </Text>
-               <Text style={{ fontSize: 18, color: 'black', paddingLeft: 10, flex: 1 }}>{data.detailAddress}</Text>
+               <Text style={{ fontSize: 18, color: 'black', paddingLeft: 10, flex: 1 }}>{companyUserContact.address}</Text>
             </View>
 
             <View style={{ width: '100%', height: 40, flexDirection: 'row', marginTop: 5 }}>
                <Text style={{ fontSize: 18, color: 'black', paddingLeft: 10, fontWeight: '500' }}>Contact Person: </Text>
-               <Text style={{ fontSize: 18, color: 'black', paddingLeft: 10, flex: 1 }}>{data.contactPerson}</Text>
+               <Text style={{ fontSize: 18, color: 'black', paddingLeft: 10, flex: 1 }}>{companyUserContact.first_name} {companyUserContact.last_name}</Text>
             </View>
 
             <View style={{ width: '100%', marginTop: 15 }}>
                <Text style={{ fontSize: 18, color: 'black', paddingLeft: 10, fontWeight: 'bold' }}>About Company: </Text>
                <View style={{ width: '100%', height: 10 }}></View>
-               <Text style={{ fontSize: 18, color: 'black', paddingLeft: 10, flex: 1 }}>{data.companyDes}</Text>
+               <Text style={{ fontSize: 18, color: 'black', paddingLeft: 10, flex: 1 }}>{companyInfor.intro}</Text>
             </View>
             <View style={{ height: 15, width: '100%' }}></View>
          </View>
@@ -167,6 +189,8 @@ class JobDetail extends PureComponent {
    }
 
    render() {
+      // console.log('jobDetail:::::', this.state.companyInfor, this.state.companyUser[0])
+      
       return (
          <View style={styles.container}>
             <Header title='Job Detail' viewRight={true}/>
