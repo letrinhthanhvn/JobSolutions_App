@@ -15,6 +15,25 @@ import { Actions } from 'react-native-router-flux';
 
 class SavedCompany extends PureComponent {
 
+   constructor(props) {
+      super(props)
+
+      this.state = {
+         listSavedCompany: []
+      }
+   }
+
+   async componentDidMount() {
+      let res = await fetch('http://localhost:3000/comcan/get_com_by_can_id/' + this.props.user.candidate_id).then((res) => res.json())
+      console.log('resCompany', res)
+      if (res.status == 'SUCCESS') {
+         this.setState({
+            listSavedCompany: res.list_company
+         })
+      } else {
+         console.log('fetch failed')
+      }
+   }
 
    renderCompany = ({ item, index }) => {
       return (
@@ -22,10 +41,10 @@ class SavedCompany extends PureComponent {
             onPress={() => this.clickCompany(item)}
          >
             <View style={{ marginTop: 5, paddingLeft: 10 }}>
-               <Text style={[styles.text, { color: '#429ef4', fontWeight: '500' }]}>{item.nameCompany}</Text>
+               <Text style={[styles.text, { color: '#429ef4', fontWeight: '500' }]}>{item.company_name}</Text>
             </View>
             <View style={{ marginTop: 5, paddingLeft: 10 }}>
-               <Text style={[styles.text, { fontSize: 18 }]}>{item.address}</Text>
+               <Text style={[styles.text, { fontSize: 18 }]}>{item.location}</Text>
             </View>
             <View style={{ paddingLeft: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                <Text style={[styles.text, { fontSize: 18 }]}>Job Posting: 25</Text>
@@ -43,9 +62,9 @@ class SavedCompany extends PureComponent {
    render() {
       return (
          <View style={styles.container}>
-            <Header title='Companies' viewRight={true}/>
+            <Header title='Companies' viewRight={true} />
             <FlatList
-               data={data}
+               data={this.state.listSavedCompany}
                renderItem={this.renderCompany}
                keyExtractor={(item, index) => String(index)}
             />
@@ -54,8 +73,7 @@ class SavedCompany extends PureComponent {
    }
 
    clickCompany = (company) => {
-      console.log('company', company)
-      Actions.companyDetail({ companyDetail: company })
+      Actions.companyDetail({ company_id: company.company_id })
    }
 }
 
@@ -126,7 +144,7 @@ const styles = StyleSheet.create({
    },
 
    companyRow: {
-      height: 95,
+      height: 105,
       width: '100%',
    },
 
@@ -142,7 +160,7 @@ const mapDispathToProps = {
 
 const mapStateToProps = (state) => {
    return {
-      // language: state.config.language
+      user: state.jobSolutions.user
    }
 }
 

@@ -12,7 +12,8 @@ import {
    StyleSheet,
    TextInput,
    ScrollView,
-   TouchableOpacity
+   TouchableOpacity,
+   Dimensions
 } from 'react-native';
 // import LoginComponent from '../../screens/Login';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -20,9 +21,11 @@ import { Actions } from 'react-native-router-flux'
 import { Button } from 'react-native-material-kit/lib/mdl';
 import Modal from 'react-native-modal';
 import Register from './register';
-import { createSelectorUserName } from '../container/jobSolutions/selector';
+import { createLoginSelector } from '../container/jobSolutions/selector';
 import { login } from '../redux/actions/jobSolutions';
 import KeyboardScroll from '../components/KeyboardScroll';
+
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class Login extends PureComponent {
 
@@ -104,7 +107,7 @@ class Login extends PureComponent {
    render() {
       return (
          <KeyboardScroll>
-            <View style={{ flex: 1 }}>
+            <ScrollView style={{ flex: 1, }} scrollEnabled={false}>
                <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 100 }}>
                   <Image source={require('../assets/tqb.jpg')} style={{ flex: 1, width: null, height: null }} resizeMode='cover' />
                </View>
@@ -114,33 +117,36 @@ class Login extends PureComponent {
                <View style={{ width: '100%', height: 250, alignItems: 'center', justifyContent: 'center', zIndex: 300 }}>
                   <Image source={require('../assets/bachkhoa_logo.jpg')} style={{ width: 80, height: 120 }} resizeMode='cover' />
                </View>
-               <ScrollView style={{ flex: 1, zIndex: 300, paddingTop: 50, }} scrollEnabled={false}>
-                  <View style={{ alignItems: 'center', height: 200, }}>
-                     {
-                        this.renderUserName()
-                     }
-                     {
-                        this.renderPassword()
-                     }
-                  </View>
-                  <View style={{ height: 90, alignItems: 'center', }}>
-                     <Button style={[styles.viewTxtInput, { alignItems: 'center', justifyContent: 'center', backgroundColor: '#9AC230', overflow: 'hidden' }]}
-                        onPress={this.signIn}>
-                        <Text style={{ color: "white", fontSize: 18, }}>Sign in</Text>
-                     </Button>
-                     <TouchableOpacity style={{ width: '60%', alignItems: 'center', marginTop: 15, height: 20 }}>
-                        <Text style={{ color: 'white', fontSize: 12 }}>Forgot password</Text>
-                     </TouchableOpacity>
-                  </View>
-                  <View style={styles.viewRegister}>
-                     <Text style={styles.textSmall}>Don't have an account?</Text>
-                     <TouchableOpacity style={{ height: '80%', justifyContent: 'center' }}
-                        onPress={this.signUp}
-                     >
-                        <Text style={[styles.textSmall, { fontWeight: '500' }]}> Sign up</Text>
-                     </TouchableOpacity>
-                  </View>
-               </ScrollView>
+               <View style={{ height: SCREEN_HEIGHT - 250, zIndex: 300 }} >
+                  {/* <View style={{ flex: 2, backgroundColor: "red" }}> */}
+                     <View style={{ alignItems: 'center', flex: 2 }}>
+                        {
+                           this.renderUserName()
+                        }
+                        {
+                           this.renderPassword()
+                        }
+                     </View>
+                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                        <Button style={[styles.viewTxtInput, { alignItems: 'center', justifyContent: 'center', backgroundColor: '#9AC230', overflow: 'hidden' }]}
+                           onPress={this.signIn}>
+                           <Text style={{ color: "white", fontSize: 18, }}>Sign in</Text>
+                        </Button>
+                        <TouchableOpacity style={{ width: '60%', alignItems: 'center', marginTop: 15, height: 20 }}>
+                           <Text style={{ color: 'white', fontSize: 12 }}>Forgot password</Text>
+                        </TouchableOpacity>
+                     </View>
+
+                     <View style={styles.viewRegister}>
+                        <Text style={styles.textSmall}>Don't have an account?</Text>
+                        <TouchableOpacity style={{ height: '80%', justifyContent: 'center' }}
+                           onPress={this.signUp}
+                        >
+                           <Text style={[styles.textSmall, { fontWeight: '500' }]}> Sign up</Text>
+                        </TouchableOpacity>
+                     </View>
+                  {/* </View> */}
+               </View>
                <Modal
                   isVisible={this.state.isShowModal}
                   backdropColor="black"
@@ -153,7 +159,7 @@ class Login extends PureComponent {
                >
                   <Register hideRegister={this.hideModal} />
                </Modal>
-            </View>
+            </ScrollView>
          </KeyboardScroll>
       )
    }
@@ -177,7 +183,7 @@ class Login extends PureComponent {
    }
 
    signIn = () => {
-      this.props.login({ userName: this.state.userName, passWord: this.state.passWord })
+      this.props.login({ username: 'thanhle', password: '123456', candidate_id: 3 })
       Actions.listField()
    }
 }
@@ -199,12 +205,12 @@ const styles = StyleSheet.create({
    },
 
    viewRegister: {
-      height: 70,
+      flex: 1,
       width: '100%',
-      marginTop: 50,
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: "center"
+      justifyContent: "center",
+      backgroundColor: 'gray'
    },
    viewDrawer: {
       flex: 1,
@@ -218,7 +224,8 @@ const mapDispathToProps = {
 
 const mapStateToProps = (state) => {
    return {
-      userName: createSelectorUserName(state)
+      user: createLoginSelector(state),
+      isLogin: state.isLogin,
    }
 }
 

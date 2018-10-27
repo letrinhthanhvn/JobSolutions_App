@@ -25,9 +25,13 @@ class ListJobs extends PureComponent {
    async componentDidMount() {
       let res = await fetch('http://localhost:3000/recruitment/get_by_industry_id/' + this.props.id).then((res) => res.json());
       // console.log('res:::::::ListJobs', res)
-      this.setState({
-         listJobs: res.results
-      })
+      if (res.status == 'SUCCESS') {
+         this.setState({
+            listJobs: res.results
+         })
+      } else {
+
+      }
    }
 
    renderField = ({ item, index }) => {

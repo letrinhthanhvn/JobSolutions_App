@@ -1,11 +1,16 @@
 import { createSelector } from 'reselect';
 
-export const createSelectorUserName = createSelector(
-   (state, props) => state.userName,
-   (userName) => {
-      if (!userName) {
+export const createLoginSelector = createSelector(
+   (state, props) => state.user,
+   (user) => {
+      if (!user) {
          return undefined
       }
-      return speaker.userName
+      return speaker.user
    }
 )
+
+
+// export const createSavedJobsSelector = createSelector(
+//    (state) => state.
+// )

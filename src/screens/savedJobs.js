@@ -9,33 +9,49 @@ import {
 import { connect } from 'react-redux';
 import ButtonIcon from '../components/ButtonIcon';
 import { Actions } from 'react-native-router-flux';
+import moment from 'moment';
 
 class SavedJobs extends PureComponent {
 
    constructor(props) {
       super(props)
+
+      this.state = {
+         listSavedJobs: []
+      }
+   }
+
+   async componentDidMount() {
+      const { user } = this.props
+      let res = await fetch('http://localhost:3000/users/get_rec_by_candidate/' + user.candidate_id).then((res) => res.json())
+      console.log('res', res)
+      if (res.status == "SUCCESS") {
+         this.setState({
+            listSavedJobs: res.list_jobs
+         })
+      } else {
+         console.log('fetch failed')
+      }
    }
 
    renderField = ({ item, index }) => {
       return (
          <TouchableOpacity style={styles.rowStyle}
-            onPress={() => Actions.jobDetail()}
+            // onPress={() => Actions.jobDetail()}
          >
-            <View>
-               <Text style={[styles.textPerField, { color: '#429ef4', fontWeight: 'bold', width: '75%' }]} numberOfLines={1}>{item.jobName}</Text>
+            <View style={styles.nameJobDelete}>
+               <Text style={[styles.textPerField, { color: '#429ef4', fontWeight: 'bold', width: '75%' }]} numberOfLines={1}>{item.work_name}</Text>
+               <ButtonIcon iconName='delete' iconColor='gray'/>
             </View>
             <View style={{ marginTop: 5 }}>
                <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.7)', fontWeight: 'bold', fontSize: 18 }]}>{item.companyName}</Text>
             </View>
             <View style={{ marginTop: 5 }}>
-               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.5)', width: '75%', fontSize: 18 }]} numberOfLines={1}>{item.address}</Text>
+               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.5)', width: '75%', fontSize: 18 }]} numberOfLines={1}>{item.location}</Text>
             </View>
             <View style={styles.viewSalary}>
-               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.5)', fontSize: 18 }]}>Salary: {item.address}</Text>
-               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.5)', fontSize: 18 }]}>Posted: {item.posted}</Text>
-            </View>
-            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 1)', fontSize: 18 }]}>Danh gia: 4.7/5</Text>
+               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.5)', fontSize: 18 }]}>Salary: {item.min_salary} - {item.max_salary} { item.type_salary == 2 ? 'VND' : item.type_salary == 3 ? "USD" : '' }</Text>
+               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.5)', fontSize: 18 }]}>Posted: {moment(item.deadline).format('YYYY-MM-DD')}</Text>
             </View>
          </TouchableOpacity>
       )
@@ -52,18 +68,18 @@ class SavedJobs extends PureComponent {
             <Text style={styles.textPerField}>Saved Jobs</Text>
             <View style={{ width: 45, height: 45 }}></View>
          </View>
-
       )
    }
 
    render() {
+      console.log('response candidate_Id', this.props.user)
       return (
          <View style={{ flex: 1 }}>
             {
                this.renderTop()
             }
             <FlatList
-               data={data[1].infor}
+               data={ this.state.listSavedJobs  }
                renderItem={this.renderField}
                keyExtractor={(item, index) => String(index)}
             />
@@ -86,7 +102,7 @@ const styles = StyleSheet.create({
       color: 'white'
    },
    rowStyle: {
-      width: '100%', height: 160,
+      width: '100%', height: 150,
       paddingLeft: 10,
       borderBottomColor: 'rgba(0, 0, 0, 0.1)',
       borderBottomWidth: 8, paddingTop: 3
@@ -98,15 +114,18 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       flexDirection: 'row',
       paddingRight: 10,
-      borderBottomWidth: 1,
-      borderBottomColor: 'rgba(0, 0, 0, 0.1)'
+   },
+   nameJobDelete: {
+      flexDirection: "row",
+      justifyContent: 'space-between',
+      alignItems: 'center'
    }
 })
 
 const mapStateToProps = (state, props) => {
 
    return {
-
+      user: state.jobSolutions.user
    }
 }
 

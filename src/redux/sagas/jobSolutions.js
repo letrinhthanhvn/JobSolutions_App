@@ -12,6 +12,22 @@ import {
 */
 function* sagaLogin(action) {
    try {
+      // let res = fetch('', {
+      //    method: 'POST',
+      //    headers: {
+      //       'Accept': 'application/json',
+      //       'Content-Type': 'application/json'
+      //    },
+      //    body: JSON.stringify({
+      //       username: '',
+      //       password: ''
+      //    })
+      // })
+      // if (res.status == "SUCCESS") {
+      //    yield put(loginSuccess(action.payload))
+      // } else {
+      //    yield put(loginFailed())
+      // } 
       yield put(loginSuccess(action.payload))
    } catch (e) {
       console.log('Catche Login', e)
@@ -43,3 +59,21 @@ export function* watchLogin() {
 // export function* watchFetchListIndustry() {
 //    yield takeLatest(types.FETCHLISTINDUSTRY, sagaListIndustry)
 // }
+
+// saved jobs
+
+/**
+* 
+*/
+// function* sagaSavedJobs() {
+//    try {
+//       let 
+//    } catch(e) {
+//     console.log('Catche SavedJobs', e)
+//    }
+// }
+
+// export function* watchSavedJobs() {
+//    yield takeLatest(types.SAVEDJOBS, sagaSavedJobs)
+// }
+

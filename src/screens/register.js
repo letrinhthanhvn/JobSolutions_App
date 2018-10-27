@@ -12,8 +12,10 @@ import {
 } from 'react-native';
 import ButtonIcon from '../components/ButtonIcon';
 import { Button } from 'react-native-material-kit/lib/mdl';
+import KeyboardScroll from '../components/KeyboardScroll';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class Register extends PureComponent {
 
@@ -154,47 +156,54 @@ class Register extends PureComponent {
 
    render() {
       return (
-         <View style={styles.container}>
+         <ScrollView style={styles.container} scrollEnabled={false}>
             {/* <View style={styles.backgroundImage}>
                <Image source={require('../assets/registerBG.jpg')} style={{ flex: 1, width: null, height: null }} resizeMode='cover' />
             </View> */}
             <View style={{ flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 200, backgroundColor: 'rgb(115, 168, 37)' }}>
 
             </View>
-            <ScrollView style={{ flex: 1, zIndex: 300, paddingTop: 20, }} scrollEnabled={false}>
-               <View style={styles.headerView}>
-                  <Text style={styles.textHeader}>REGISTER</Text>
-                  <ButtonIcon iconName='highlight-off' iconColor='white' size={24} style={styles.hideRegister}
-                     onPress={this.props.hideRegister}
-                  />
-               </View>
-               <View style={styles.logo}>
-                  <Image source={require('../assets/logo.png')}
-                     style={{ height: 40, width: 40 }}
-                     resizeMode='contain'
-                  />
-                  <Text style={styles.logoText}>JobSolutions</Text>
-               </View>
-               <View style={{ height: 50, width: '100%' }}></View>
-               {
-                  this.renderUserName()
-               }
-               {
-                  this.renderEmail()
-               }
-               {
-                  this.renderPassword()
-               }
-               {
-                  this.renderConfirmPassword()
-               }
-               <Button style={[styles.viewTxtInput, { alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgb(46, 76, 1)', overflow: 'hidden' }]}
-                  // onPress={() => Actions.listField()}
-               >
-                  <Text style={{ color: "white", fontSize: 18, }}>Sign in</Text>
-               </Button>
-            </ScrollView>
-         </View>
+            <View style={{ flex: 1, zIndex: 300, paddingTop: 20, backgroundColor: 'green'}}>
+               <KeyboardScroll>
+                  <View style={styles.headerView}>
+                     <Text style={styles.textHeader}>REGISTER</Text>
+                     <ButtonIcon iconName='highlight-off' iconColor='white' size={24} style={styles.hideRegister}
+                        onPress={this.props.hideRegister}
+                     />
+                  </View>
+                  <View style={styles.logo}>
+                     <Image source={require('../assets/logo.png')}
+                        style={{ height: 40, width: 40 }}
+                        resizeMode='contain'
+                     />
+                     <Text style={styles.logoText}>JobSolutions</Text>
+                  </View>
+                  <View style={{ height: 30, width: '100%' }}></View>
+                  <View style={{ flex: 1, width: '100%', backgroundColor: 'red' }}>
+                     {
+                        this.renderUserName()
+                     }
+                     {
+                        this.renderEmail()
+                     }
+                     {
+                        this.renderPassword()
+                     }
+                     {
+                        this.renderConfirmPassword()
+                     }
+                     <View style={{ flex: 1, alignItems: 'center', justifyContent: "center"  }}>
+                     <Button style={[styles.viewTxtInput, { alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgb(46, 76, 1)', overflow: 'hidden' }]}
+                     // onPress={() => Actions.listField()}
+                     >
+                        <Text style={{ color: "white", fontSize: 18, }}>Sign in</Text>
+                     </Button>
+                     </View>
+                     
+                  </View>
+               </KeyboardScroll>
+            </View>
+         </ScrollView>
       )
    }
 }
@@ -203,43 +212,36 @@ const styles = StyleSheet.create({
    container: {
       flex: 1
    },
-
    backgroundImage: {
       position: 'absolute',
       top: 0, left: 0, right: 0, bottom: 0,
       zIndex: 100
    },
-
    headerView: {
       height: 45,
       width: '100%',
       alignItems: "center",
       justifyContent: "center"
    },
-
    textHeader: {
       color: "white",
       fontSize: 18
    },
-
    hideRegister: {
       position: "absolute",
       right: 15,
    },
-
    perInforStyle: {
-      height: 70,
+      height: 65,
       width: "100%",
       paddingLeft: 25,
       paddingRight: 25
    },
-
    textInInfor: {
       color: 'white',
       fontSize: 14,
       fontWeight: '500'
    },
-
    logo: {
       height: 80,
       width: '100%',
@@ -247,13 +249,11 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       flexDirection: 'row'
    },
-
    logoText: {
       color: 'white',
       fontSize: 28,
       paddingLeft: 5
    },
-   
    viewTxtInput: {
       height: 45,
       backgroundColor: 'rgba(255, 255, 255, 0.2)',
@@ -262,7 +262,8 @@ const styles = StyleSheet.create({
       marginLeft: 25,
       flexDirection: 'row',
       marginRight: 25,
-      marginTop: 65
+      justifyContent: 'center',
+      width: '100%'
    },
 })
 

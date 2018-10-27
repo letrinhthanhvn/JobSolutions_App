@@ -42,3 +42,24 @@ export const loginFailed = () => {
 //    }
 // }
 
+export const savedJob = (data) => {
+   return {
+      type: types.SAVEDJOBS,
+      payload: data
+   }
+}
+
+export const savedJobSuccess = (data) => {
+   return {
+      type: types.SAVEDJOBS_SUCCESS,
+      payload: data
+   }
+}
+
+export const savedJobFailed = () => {
+   return {
+      type: types.SAVEDJOBS_FAILED
+   }
+}
+
+

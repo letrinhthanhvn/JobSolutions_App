@@ -36,9 +36,24 @@ class ListField extends PureComponent {
 
    async componentDidMount() {
       let res = await fetch('http://localhost:3000/industry/get_industry_list').then((res) => res.json());
-      this.setState({
-         industryList: res.result
-      })
+      // let resSavedCompany = await fetch('http://localhost:3000/users/candidate_save_rec', {
+      //    method: 'POST',
+      //    headers: {
+      //       'Accept': 'application/json',
+      //       'Content-Type': 'application/json'
+      //    },
+      //    body: JSON.stringify({
+      //       candidate_id: 1,
+      //       recruitment_id: 1,
+      //    })
+      // })
+      if (res.status == 'SUCCESS') {
+         this.setState({
+            industryList: res.results
+         })
+      } else {
+
+      }
    }
 
    renderField = ({ item, index }) => {
@@ -55,11 +70,11 @@ class ListField extends PureComponent {
       const { industryList } = this.state
       return (
          <View style={{ flex: 1 }}>
-            <HeaderMain title='Categories'/>
+            <HeaderMain title='Categories' />
             <FlatList
                data={industryList}
                renderItem={this.renderField}
-               keyExtractor={( item, index ) => String(index)}
+               keyExtractor={(item, index) => String(index)}
             />
          </View>
       )
@@ -81,11 +96,11 @@ const styles = StyleSheet.create({
    },
 
    btnStyle: {
-      paddingLeft: 15, 
-      width: '100%', 
-      height: 45, 
-      justifyContent: 'center', 
-      borderBottomColor: 'gray', 
+      paddingLeft: 15,
+      width: '100%',
+      height: 45,
+      justifyContent: 'center',
+      borderBottomColor: 'gray',
       borderBottomWidth: 1
    }
 })

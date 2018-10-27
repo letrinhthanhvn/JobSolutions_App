@@ -9,11 +9,11 @@ import {
    View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Drawer from '../components/Drawer';
 import LoginSelector from '../container/jobSolutions/index';
 import SavedCompany from '../screens/savedCompany';
 import CompanyDetail from '../screens/companyDetail';
 import SavedJobs from '../screens/savedJobs';
+import UserInfor from '../screens/userInfor';
 
 const TabBarIcon = ({ isFocused, iconName }) => {
    var color = isFocused ? 'white' : 'rgba(255, 255, 255, 0.4)';
@@ -97,6 +97,13 @@ class NavigatorMobile extends PureComponent {
                      swipeEnabled={false}
                      panHandlers={null}
                   //    initßial
+                  />
+                  <Scene
+                     key='userInfor'
+                     component={UserInfor}
+                     swipeEnabled={false}
+                     panHandlers={null}
+                     // initial
                   />
                </Scene>
             </Scene>

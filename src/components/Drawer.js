@@ -19,7 +19,7 @@ class DrawerMenu extends PureComponent {
       return (
          // <Body>
          <View style={{ width: 300, flex: 1, backgroundColor: '#9AC230', borderTopEndRadius: 23, borderBottomEndRadius: 23 }}>
-            <View style={{ height: 250, width: '100%' }}>
+            <View style={{ height: 150, width: '100%' }}>
 
             </View>
             <TouchableOpacity style={styles.perRow}
@@ -58,7 +58,7 @@ class DrawerMenu extends PureComponent {
             <TouchableOpacity style={styles.perRow}
                onPress={this.logOut}>
                <Icon name='forward' size={24} color='white' />
-               <Text style={{ fontSize: 18, color: 'white', marginLeft: 20, }}>{this.props.userName ? 'Log out' : 'Log in'}</Text>
+               <Text style={{ fontSize: 18, color: 'white', marginLeft: 20, }}>{this.props.user.username != '' ? 'Log out' : 'Log in'}</Text>
             </TouchableOpacity>
          </View>
          // </Body>
@@ -77,8 +77,12 @@ class DrawerMenu extends PureComponent {
    }
 
    savedCompany = () => {
-      this.props.closeMenu()
-      Actions.savedCompany()
+      if (this.props.user.username !== '') {
+         this.props.closeMenu()
+         Actions.savedCompany()
+      } else {
+         alert('Bạn chưa đăng nhập!')
+      }
    }
 
    jobsCategories = () => {
@@ -86,8 +90,12 @@ class DrawerMenu extends PureComponent {
    }
 
    savedJobs = () => {
-      this.props.closeMenu()
-      Actions.savedJobs()
+      if (this.props.user.username !== '') {
+         this.props.closeMenu()
+         Actions.savedJobs()
+      } else {
+         alert('Bạn chưa đăng nhập!')
+      }
    }
 
    searchJobs = () => {
@@ -95,7 +103,12 @@ class DrawerMenu extends PureComponent {
    }
 
    userInfor = () => {
-      this.props.closeMenu()
+      if (this.props.user.username !== '') {
+         this.props.closeMenu()
+         Actions.userInfor()
+      } else {
+         alert('Bạn chưa đăng nhập!')
+      }
    }
 
 }
@@ -111,8 +124,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state, props) => {
    return {
-      userName: state.jobSolutions.userName
+      user: state.jobSolutions.user
    }
 }
 
-export default  connect(mapStateToProps)(DrawerMenu)
+export default connect(mapStateToProps)(DrawerMenu)

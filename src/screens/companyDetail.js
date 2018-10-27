@@ -20,6 +20,26 @@ class CompanyDetail extends PureComponent {
       super(props)
 
       this.scrollY = new Animated.Value(0)
+      this.state = {
+         companyInfor: {}
+      }
+   }
+
+   async componentDidMount() {
+      let res = await fetch('http://localhost:3000/company/get_by_id/' + this.props.company_id
+      ).then((res) => res.json()).catch((error) => {
+         console.error(error);
+      });
+      if (res.status == "SUCCESS") {
+         console.log('resfasdf', res)
+         this.setState({
+            companyInfor: res.company
+         })
+      } else {
+         console.log('fetch company infor failed')
+      } 
+      // let res = await fetch('localhost:3000/company/get_by_id/1').then((res) => res.json())
+     
    }
 
    renderNameCompany = (companyDetail) => {
@@ -33,7 +53,7 @@ class CompanyDetail extends PureComponent {
             </View>
             <View>
                <View style={styles.textHeaderStyle}>
-                  <Text style={styles.textNameComp}>{companyDetail.nameCompany}</Text>
+                  <Text style={styles.textNameComp}>{companyDetail.company_name}</Text>
                </View>
                <View style={[styles.textHeaderStyle, { height: 30 }]}>
                   <Text style={styles.textFieldJob}>{companyDetail.fieldJob}</Text> 
@@ -47,7 +67,7 @@ class CompanyDetail extends PureComponent {
       return (
          <View style={styles.describeComp}>
             <View style={styles.viewCompDes}>
-               <Text style={styles.textCompDes} numberOfLines={7}>{companyDetail.companyDes}</Text>
+               <Text style={styles.textCompDes} numberOfLines={7}>{companyDetail.intro}</Text>
             </View>
             <TouchableOpacity style={styles.readMore}>
                <Icon name='more-horiz' size={28} color='black' />
@@ -61,7 +81,7 @@ class CompanyDetail extends PureComponent {
          <View style={styles.addressStyle}>
             <Text style={styles.textAddress}>Địa chỉ văn phòng chính:</Text>
             <TouchableOpacity style={styles.viewDetailAddress}>
-               <Text style={styles.textDetaliAddress}>{companyDetail.detailAddress}</Text>
+               <Text style={styles.textDetaliAddress}>{companyDetail.location}</Text>
                <Icon name='chevron-right' size={28} color='rgba(0, 0, 0, 0.3)' />
             </TouchableOpacity>
          </View>
@@ -102,8 +122,9 @@ class CompanyDetail extends PureComponent {
    }
 
    render() {
+      console.log('this.props.companyid', this.props)
 
-      const { companyDetail } = this.props
+      const { companyInfor } = this.state
 
       return (
          <View style={styles.container}>
@@ -124,20 +145,20 @@ class CompanyDetail extends PureComponent {
                )}
                style={{ zIndex: 200, flex: 1, }}
                decelerationRate={0.7}
+               scrollEventThrottle={16}
             >
                <View style={{ height: 200, width: '100%', }}>
 
                </View>
                <View style={{ backgroundColor: 'rgb(206, 206, 206)' }}>
-
                {
-                  this.renderNameCompany(companyDetail)
+                  this.renderNameCompany(companyInfor)
                }
                {
-                  this.renderDecribeComp(companyDetail)
+                  this.renderDecribeComp(companyInfor)
                }
                {
-                  this.renderAddress(companyDetail)
+                  this.renderAddress(companyInfor)
                }
                {
                   this.renderNumberMember()
