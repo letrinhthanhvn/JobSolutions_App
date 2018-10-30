@@ -21,7 +21,8 @@ class CompanyDetail extends PureComponent {
 
       this.scrollY = new Animated.Value(0)
       this.state = {
-         companyInfor: {}
+         companyInfor: {},
+         company_user: {}
       }
    }
 
@@ -33,7 +34,8 @@ class CompanyDetail extends PureComponent {
       if (res.status == "SUCCESS") {
          console.log('resfasdf', res)
          this.setState({
-            companyInfor: res.company
+            companyInfor: res.company,
+            company_user: res.company_user[0]
          })
       } else {
          console.log('fetch company infor failed')
@@ -88,17 +90,18 @@ class CompanyDetail extends PureComponent {
       )
    }
 
-   renderContactInfor = () => {
+   renderContactInfor = (company_user) => {
+      console.log('company Infor', company_user)
       return (
          <View style={styles.viewContact}>
             <Text style={styles.textInforContact}>Thông tin liên hệ</Text>
             <TouchableOpacity style={[styles.rowContact, { marginTop: 10 }]}>
                <Icon name='home' size={24} color='gray' />
-               <Text style={{ color: 'black', fontSize: 16, paddingLeft: 15 }}>facebook</Text>
+               <Text style={{ color: 'black', fontSize: 16, paddingLeft: 15 }}>Facebook: {company_user.facebook_link}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.rowContact}>
                <Icon name='home' size={24} color='gray' />
-               <Text style={{ color: 'black', fontSize: 16, paddingLeft: 15 }}>email</Text>
+               <Text style={{ color: 'black', fontSize: 16, paddingLeft: 15 }}>Website link: {company_user.website_link}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.rowContact}>
@@ -124,7 +127,7 @@ class CompanyDetail extends PureComponent {
    render() {
       console.log('this.props.companyid', this.props)
 
-      const { companyInfor } = this.state
+      const { companyInfor, company_user } = this.state
 
       return (
          <View style={styles.container}>
@@ -164,7 +167,7 @@ class CompanyDetail extends PureComponent {
                   this.renderNumberMember()
                }
                {
-                  this.renderContactInfor()
+                  this.renderContactInfor(company_user)
                }
                </View>
             </Animated.ScrollView>

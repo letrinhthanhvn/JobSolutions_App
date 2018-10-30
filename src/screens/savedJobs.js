@@ -4,55 +4,57 @@ import {
    Text,
    FlatList,
    TouchableOpacity,
-   StyleSheet
+   StyleSheet,
+   Alert
 } from 'react-native';
 import { connect } from 'react-redux';
 import ButtonIcon from '../components/ButtonIcon';
 import { Actions } from 'react-native-router-flux';
 import moment from 'moment';
-
+import { savedJob } from '../redux/actions/jobSolutions';
 class SavedJobs extends PureComponent {
 
    constructor(props) {
       super(props)
 
       this.state = {
-         listSavedJobs: []
+         listSavedJobs: [],
+         job: {}
       }
    }
 
    async componentDidMount() {
-      const { user } = this.props
-      let res = await fetch('http://localhost:3000/users/get_rec_by_candidate/' + user.candidate_id).then((res) => res.json())
-      console.log('res', res)
-      if (res.status == "SUCCESS") {
-         this.setState({
-            listSavedJobs: res.list_jobs
-         })
-      } else {
-         console.log('fetch failed')
-      }
+      // const { user, savedJobs } = this.props
+      // let res = await fetch('http://localhost:3000/users/get_rec_by_candidate/' + user.candidate_id).then((res) => res.json())
+      // console.log('res', res)
+      // if (res.status == "SUCCESS") {
+      //    this.setState({
+      //       listSavedJobs: res.list_jobs
+      //    })
+      // } else {
+      //    console.log('fetch failed')
+      // }
+
    }
 
    renderField = ({ item, index }) => {
       return (
          <TouchableOpacity style={styles.rowStyle}
-            // onPress={() => Actions.jobDetail()}
+            onPress={() => this.detailJob(item)}
          >
             <View style={styles.nameJobDelete}>
                <Text style={[styles.textPerField, { color: '#429ef4', fontWeight: 'bold', width: '75%' }]} numberOfLines={1}>{item.work_name}</Text>
-               <ButtonIcon iconName='delete' iconColor='gray'/>
+               <ButtonIcon iconName='delete' iconColor='gray'
+                  onPress={() => this.deleteSavedJob(item)}
+               />
             </View>
-            <View style={{ marginTop: 5 }}>
-               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.7)', fontWeight: 'bold', fontSize: 18 }]}>{item.companyName}</Text>
-            </View>
-            <View style={{ marginTop: 5 }}>
-               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.5)', width: '75%', fontSize: 18 }]} numberOfLines={1}>{item.location}</Text>
-            </View>
-            <View style={styles.viewSalary}>
-               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.5)', fontSize: 18 }]}>Salary: {item.min_salary} - {item.max_salary} { item.type_salary == 2 ? 'VND' : item.type_salary == 3 ? "USD" : '' }</Text>
+            <View style={[styles.viewSalary, { marginTop: 5 }]}>
+               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.5)', width: '25%', fontSize: 18 }]} numberOfLines={1}>{item.location}</Text>
                <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.5)', fontSize: 18 }]}>Posted: {moment(item.deadline).format('YYYY-MM-DD')}</Text>
             </View>
+            {/* <View style={styles.viewSalary}>
+
+            </View> */}
          </TouchableOpacity>
       )
    }
@@ -72,18 +74,51 @@ class SavedJobs extends PureComponent {
    }
 
    render() {
-      console.log('response candidate_Id', this.props.user)
       return (
          <View style={{ flex: 1 }}>
             {
                this.renderTop()
             }
-            <FlatList
-               data={ this.state.listSavedJobs  }
-               renderItem={this.renderField}
-               keyExtractor={(item, index) => String(index)}
-            />
+            {
+               this.props.savedJobs.length != 0 ?
+                  <FlatList
+                     data={this.props.savedJobs}
+                     renderItem={this.renderField}
+                     keyExtractor={(item, index) => String(index)}
+                  />
+                  :
+                  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
+                     <Text style={{ fontSize: 24, color: 'black' }}>Bạn chưa lưu công việc nào!</Text>
+                  </View>
+            }
          </View>
+      )
+   }
+
+   detailJob = async (job) => {
+      let res = await fetch('http://localhost:3000/recruitment/get_by_industry_id/' + job.industry_id).then((res) => res.json());
+      // console.log('res:::::::ListJobs', res)
+      if (res.status == 'SUCCESS') {
+         this.setState({
+            job: res.results.find(e => e.recruitment_id == job.recruitment_id)
+         })
+         setTimeout(() => {
+            Actions.jobDetail({ job: this.state.job, industry_id: this.props.id })
+         }, 200)
+      } else {
+
+      }
+   }
+
+   deleteSavedJob = (job) => {
+      Alert.alert(
+         'Notice!',
+         'Are you sure delete this job?',
+         [
+            { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+            { text: 'OK', onPress: () => this.props.savedJob({ username: this.props.user.username, job: job }) },
+         ],
+         { cancelable: false }
       )
    }
 }
@@ -102,7 +137,7 @@ const styles = StyleSheet.create({
       color: 'white'
    },
    rowStyle: {
-      width: '100%', height: 150,
+      width: '100%', height: 100,
       paddingLeft: 10,
       borderBottomColor: 'rgba(0, 0, 0, 0.1)',
       borderBottomWidth: 8, paddingTop: 3
@@ -122,126 +157,28 @@ const styles = StyleSheet.create({
    }
 })
 
+const mapDispatchToProps = {
+   savedJob
+}
+
 const mapStateToProps = (state, props) => {
 
+   let savedJobs = state.jobSolutions.savedJobs
+   let username = state.jobSolutions.user.username
+   let savedJobsList = []
+
+   if (savedJobs && username != '') {
+      savedJobsList = savedJobs[username]
+   }
+
    return {
-      user: state.jobSolutions.user
+      user: state.jobSolutions.user,
+      savedJobs: savedJobsList || []
    }
 }
 
-export default connect(mapStateToProps)(SavedJobs)
+export default connect(mapStateToProps, mapDispatchToProps)(SavedJobs)
 
-const data = [
-   {
-      id: 1,
-      infor: [
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
 
-      ]
-   }
-   ,
-   {
-      id: 2, infor: [
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'Web Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'Android Developers', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: '.Net/C# Developers', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'Mobile Developers', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'Front-end Developers', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'React-Native Developers', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-
-      ]
-   },
-   {
-      id: 3, infor: [
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-
-      ]
-   },
-   {
-      id: 4, infor: [
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-
-      ]
-   },
-   {
-      id: 5, infor: [
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-
-      ]
-   },
-   {
-      id: 6, infor: [
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-
-      ]
-   },
-   {
-      id: 7, infor: [
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-
-      ]
-   },
-   {
-      id: 8, infor: [
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-
-      ]
-   },
-   {
-      id: 9, infor: [
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-         { id: 1, jobName: 'IOS Engineer', companyName: 'Cty Co phan Luci', salary: '', posted: '20/10/2018', address: 'Ha Noi' },
-
-      ]
-   },
-]
 
  // Swift Engineer  Android Developers  Web Developers   Back-end Developers  Front-end Developers   PHP Engineer      .NET/C# Developer        Winform Developers   

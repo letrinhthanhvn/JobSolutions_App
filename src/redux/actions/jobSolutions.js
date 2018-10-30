@@ -21,27 +21,7 @@ export const loginFailed = () => {
    }
 }
 
-// fetch list industry
-// export const fetchIndustry = (data) => {
-//    return {
-//       type: types.FETCHLISTINDUSTRY,
-//       payload: data
-//    }
-// }
-
-// export const fetchIndustrySuccess = (data) => {
-//    return {
-//       type: types.FETCHLISTINDUSTRY_SUCCESS,
-//       payload: data
-//    }
-// }
-
-// export const fetchIndustryFailed = () => {
-//    return {
-//       type: types.FETCHLISTINDUSTRY_FAILED
-//    }
-// }
-
+// saved job
 export const savedJob = (data) => {
    return {
       type: types.SAVEDJOBS,
@@ -62,4 +42,44 @@ export const savedJobFailed = () => {
    }
 }
 
+// register
+export const register = (data) => {
+   return {
+      type: types.REGISTER,
+      payload: data
+   }
+}
 
+export const registerSuccess = (data) => {
+   return {
+      type: types.REGISTER_SUCCESS,
+      payload: data
+   }
+}
+
+export const registerFailed = () => {
+   return {
+      type: types.REGISTER_FAILED
+   }
+}
+
+// saved company
+export const savedCompanyFunc = (data) => {
+   return {
+      type: types.SAVEDCOMPANY,
+      payload: data
+   }
+}
+
+export const savedCompanySuccess = (data) => {
+   return {
+      type: types.SAVEDCOMPANY_SUCCESS,
+      payload: data
+   }
+}
+
+export const savedCompanyFailed = () => {
+   return {
+      type: types.SAVEDCOMPANY_FAILED
+   }
+}

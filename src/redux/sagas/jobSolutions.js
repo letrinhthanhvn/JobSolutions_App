@@ -4,7 +4,9 @@ import {
    loginSuccess,
    loginFailed,
    fetchIndustrySuccess,
-   fetchIndustryFailed
+   fetchIndustryFailed,
+   registerSuccess,
+   registerFailed
 } from '../actions/jobSolutions'
 
 /**
@@ -12,23 +14,24 @@ import {
 */
 function* sagaLogin(action) {
    try {
-      // let res = fetch('', {
-      //    method: 'POST',
-      //    headers: {
-      //       'Accept': 'application/json',
-      //       'Content-Type': 'application/json'
-      //    },
-      //    body: JSON.stringify({
-      //       username: '',
-      //       password: ''
-      //    })
-      // })
-      // if (res.status == "SUCCESS") {
-      //    yield put(loginSuccess(action.payload))
-      // } else {
-      //    yield put(loginFailed())
-      // } 
-      yield put(loginSuccess(action.payload))
+      let res = yield fetch('http://localhost:3000/users/signin_candidate', {
+         method: 'POST',
+         headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+         },
+         body: JSON.stringify({
+            user_name: action.payload.username,
+            password: action.payload.password,
+            role: 1,
+         })
+      }).then((res) => res.json())
+      if (res.status == "SUCCESS") {
+         console.log('sagaLogin', res)
+         yield put(loginSuccess({username: action.payload.username, password: action.payload.password, candidate_id: res.candidate.candidate_id}))
+      } else {
+         yield put(loginFailed())
+      } 
    } catch (e) {
       console.log('Catche Login', e)
       yield put(loginFailed())
@@ -76,4 +79,38 @@ export function* watchLogin() {
 // export function* watchSavedJobs() {
 //    yield takeLatest(types.SAVEDJOBS, sagaSavedJobs)
 // }
+
+/**
+* 
+*/
+function* sagaRegister(action) {
+   try {
+      let res = yield fetch('http://localhost:3000/users/register_candidate',  {
+         method: 'POST',
+         headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+         },
+         body: JSON.stringify({
+            user_name: action.payload.username,
+            password: action.payload.password,
+            first_name: "thanh",
+            last_name: "le"
+         })
+      }).then((res) => res.json())
+      if (res.status == "SUCCESS") {
+         yield put(registerSuccess(action.payload))
+      } else {
+         yield put(registerFailed())
+      }
+      console.log('resRegister', res)
+   } catch(e) {
+    console.log('Catche Register', e)
+   }
+}
+
+export function* watchRegister() {
+   yield takeLatest(types.REGISTER, sagaRegister)
+}
+
 

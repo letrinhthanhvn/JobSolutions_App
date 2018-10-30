@@ -109,7 +109,7 @@ class ListJobs extends PureComponent {
 
    onPressJob = (item) => {
       // if (this.props.userName) {
-      Actions.jobDetail({ job: item })
+      Actions.jobDetail({ job: item, industry_id: this.props.id })
       // } else {
       // alert('Ban chua dang nhap')
       // }

@@ -13,11 +13,23 @@ import {
 import ButtonIcon from '../components/ButtonIcon';
 import { Button } from 'react-native-material-kit/lib/mdl';
 import KeyboardScroll from '../components/KeyboardScroll';
+import { register } from '../redux/actions/jobSolutions';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class Register extends PureComponent {
+
+   constructor(props) {
+      super(props)
+
+      this.state = {
+         username: '',
+         password: '',
+         confirmPassword: '',
+         email: ''
+      }
+   }
 
    renderUserName = () => {
       return (
@@ -28,7 +40,7 @@ class Register extends PureComponent {
                   style={{ height: 45, width: '80%', color: 'white', fontSize: 14 }}
                   placeholder='Username'
                   placeholderTextColor='rgba(255, 255, 255, 0.5)'
-                  // onChangeText={(text) => this.setState({ text })}
+                  onChangeText={(text) => this.setState({ username: text })}
                   // value={this.state.text}
                   // style={styles.typeMusicText}
                   returnKeyType='done'
@@ -61,7 +73,7 @@ class Register extends PureComponent {
                   style={{ height: 45, width: '80%', color: 'white', fontSize: 14 }}
                   placeholder='Email'
                   placeholderTextColor='rgba(255, 255, 255, 0.5)'
-                  // onChangeText={(text) => this.setState({ text })}
+                  onChangeText={(text) => this.setState({ email: text })}
                   // value={this.state.text}
                   // style={styles.typeMusicText}
                   returnKeyType='done'
@@ -95,7 +107,7 @@ class Register extends PureComponent {
                   style={{ height: 45, width: '80%', color: 'white', fontSize: 14 }}
                   placeholder='Password'
                   placeholderTextColor='rgba(255, 255, 255, 0.5)'
-                  // onChangeText={(text) => this.setState({ text })}
+                  onChangeText={(text) => this.setState({ password: text })}
                   // value={this.state.text}
                   // style={styles.typeMusicText}
                   returnKeyType='done'
@@ -129,7 +141,7 @@ class Register extends PureComponent {
                   style={{ height: 45, width: '80%', color: 'white', fontSize: 14 }}
                   placeholder='Confirm Password'
                   placeholderTextColor='rgba(255, 255, 255, 0.5)'
-                  // onChangeText={(text) => this.setState({ text })}
+                  onChangeText={(text) => this.setState({ confirmPassword: text })}
                   // value={this.state.text}
                   // style={styles.typeMusicText}
                   returnKeyType='done'
@@ -163,7 +175,7 @@ class Register extends PureComponent {
             <View style={{ flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 200, backgroundColor: 'rgb(115, 168, 37)' }}>
 
             </View>
-            <View style={{ flex: 1, zIndex: 300, paddingTop: 20, backgroundColor: 'green'}}>
+            <View style={{ flex: 1, zIndex: 300, paddingTop: 20, height: SCREEN_HEIGHT - 20, width: '100%' }}>
                <KeyboardScroll>
                   <View style={styles.headerView}>
                      <Text style={styles.textHeader}>REGISTER</Text>
@@ -179,7 +191,7 @@ class Register extends PureComponent {
                      <Text style={styles.logoText}>JobSolutions</Text>
                   </View>
                   <View style={{ height: 30, width: '100%' }}></View>
-                  <View style={{ flex: 1, width: '100%', backgroundColor: 'red' }}>
+                  <View style={{ flex: 1, width: '100%' }}>
                      {
                         this.renderUserName()
                      }
@@ -192,19 +204,32 @@ class Register extends PureComponent {
                      {
                         this.renderConfirmPassword()
                      }
-                     <View style={{ flex: 1, alignItems: 'center', justifyContent: "center"  }}>
-                     <Button style={[styles.viewTxtInput, { alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgb(46, 76, 1)', overflow: 'hidden' }]}
-                     // onPress={() => Actions.listField()}
-                     >
-                        <Text style={{ color: "white", fontSize: 18, }}>Sign in</Text>
-                     </Button>
+                     <View style={{ flex: 1, alignItems: 'center', justifyContent: "center", marginTop: 25 }}>
+                        <Button style={[styles.viewTxtInput, { alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgb(46, 76, 1)', overflow: 'hidden' }]}
+                           onPress={this.register}
+                        >
+                           <Text style={{ color: "white", fontSize: 18, }}>Sign in</Text>
+                        </Button>
                      </View>
-                     
+
                   </View>
                </KeyboardScroll>
             </View>
          </ScrollView>
       )
+   }
+
+   register = () => {
+      // if (this.state.username == '') {
+
+      // }
+      if (this.state.password != this.state.confirmPassword) {
+         alert('Xac nhan mat khau khong dung!')
+      } else if (this.state.username == '' || this.state.password == '' || this.state.confirmPassword == '' || this.state.email == '') {
+         alert('Ban chua dien du thong tin!')
+      } else {
+         this.props.register({ username: this.state.username, password: this.state.password, firstname: '', lastname: '' })
+      }
    }
 }
 
@@ -263,17 +288,18 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       marginRight: 25,
       justifyContent: 'center',
-      width: '100%'
+      width: '90%'
    },
 })
 
 const mapDispathToProps = {
-
+   register
 }
 
 const mapStateToProps = (state) => {
    return {
-      // language: state.config.language
+      user: state.jobSolutions.user,
+      isRegister: state.jobSolutions.isRegister
    }
 }
 

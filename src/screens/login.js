@@ -183,8 +183,22 @@ class Login extends PureComponent {
    }
 
    signIn = () => {
-      this.props.login({ username: 'thanhle', password: '123456', candidate_id: 3 })
-      Actions.listField()
+      console.log('username, password', this.state.userName, this.state.passWord)
+      
+      if (this.state.userName == '') {
+         alert('Bạn chưa điền username!')
+      } else if (this.state.passWord == '') {
+         alert("Bạn chưa điền mật khẩu!") 
+      } else {
+         this.props.login({ username: this.state.userName, password: this.state.passWord })
+         setTimeout(() => {
+            if (!this.props.isLogin && this.props.user.username == '') {
+               alert('Tài khoản hoặc mật khẩu không đúng!')
+            } else if (!this.props.isLogin && this.props.user.username != '') {
+               Actions.listField()
+            }
+         }, 200)
+      }
    }
 }
 
@@ -210,7 +224,6 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: "center",
-      backgroundColor: 'gray'
    },
    viewDrawer: {
       flex: 1,
@@ -224,8 +237,8 @@ const mapDispathToProps = {
 
 const mapStateToProps = (state) => {
    return {
-      user: createLoginSelector(state),
-      isLogin: state.isLogin,
+      user: state.jobSolutions.user,
+      isLogin: state.jobSolutions.isLogin,
    }
 }
 

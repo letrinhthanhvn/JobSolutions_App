@@ -6,12 +6,14 @@ import {
    Text,
    StyleSheet,
    FlatList,
-   TouchableOpacity
+   TouchableOpacity,
+   Alert
 } from 'react-native';
 import Header from '../components/header';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ButtonIcon from '../components/ButtonIcon';
 import { Actions } from 'react-native-router-flux';
+import { savedCompanyFunc } from '../redux/actions/jobSolutions';
 
 class SavedCompany extends PureComponent {
 
@@ -24,15 +26,15 @@ class SavedCompany extends PureComponent {
    }
 
    async componentDidMount() {
-      let res = await fetch('http://localhost:3000/comcan/get_com_by_can_id/' + this.props.user.candidate_id).then((res) => res.json())
-      console.log('resCompany', res)
-      if (res.status == 'SUCCESS') {
-         this.setState({
-            listSavedCompany: res.list_company
-         })
-      } else {
-         console.log('fetch failed')
-      }
+      // let res = await fetch('http://localhost:3000/comcan/get_com_by_can_id/' + this.props.user.candidate_id).then((res) => res.json())
+      // console.log('resCompany', res)
+      // if (res.status == 'SUCCESS') {
+      //    this.setState({
+      //       listSavedCompany: res.list_company
+      //    })
+      // } else {
+      //    console.log('fetch failed')
+      // }
    }
 
    renderCompany = ({ item, index }) => {
@@ -41,7 +43,7 @@ class SavedCompany extends PureComponent {
             onPress={() => this.clickCompany(item)}
          >
             <View style={{ marginTop: 5, paddingLeft: 10 }}>
-               <Text style={[styles.text, { color: '#429ef4', fontWeight: '500' }]}>{item.company_name}</Text>
+               <Text style={[styles.text, { color: '#429ef4', fontWeight: '500' }]}>{item.nameCompany}</Text>
             </View>
             <View style={{ marginTop: 5, paddingLeft: 10 }}>
                <Text style={[styles.text, { fontSize: 18 }]}>{item.location}</Text>
@@ -52,6 +54,7 @@ class SavedCompany extends PureComponent {
                   iconName='delete'
                   iconColor='gray'
                   size={24}
+                  onPress={() => this.deleteSavedJob(item)}
                />
             </View>
             <View style={{ height: 5, backgroundColor: 'rgba(0, 0, 0, 0.1)', position: "absolute", bottom: 0, left: 0, right: 0 }}></View>
@@ -63,11 +66,19 @@ class SavedCompany extends PureComponent {
       return (
          <View style={styles.container}>
             <Header title='Companies' viewRight={true} />
-            <FlatList
-               data={this.state.listSavedCompany}
-               renderItem={this.renderCompany}
-               keyExtractor={(item, index) => String(index)}
-            />
+            {
+               this.props.savedCompany.length != 0 ?
+                  <FlatList
+                     data={this.props.savedCompany}
+                     renderItem={this.renderCompany}
+                     keyExtractor={(item, index) => String(index)}
+                  />
+                  :
+                  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
+                     <Text style={{ fontSize: 24, color: 'black' }}>Bạn chưa lưu công ty nào!</Text>
+                  </View>
+            }
+
          </View>
       )
    }
@@ -75,69 +86,19 @@ class SavedCompany extends PureComponent {
    clickCompany = (company) => {
       Actions.companyDetail({ company_id: company.company_id })
    }
+
+   deleteSavedJob = (company) => {
+      Alert.alert(
+         'Notice!',
+         'Are you sure delete this company?',
+         [
+            { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+            { text: 'OK', onPress: () => this.props.savedCompanyFunc({ username: this.props.user.username, company: company }) },
+         ],
+         { cancelable: false }
+      )
+   }
 }
-
-const data = [
-   {
-      id: 1,
-      nameJob: 'Lap Trinh Vien',
-      nameCompany: 'Cong Ty CP Cong Nghe Tin Hoc H.T.L',
-      address: 'Ha Noi',
-      fieldJob: 'IT - Software',
-      experienced: 'Non-Manager',
-      salary: '700 $',
-      date: '31/10/2018',
-      jobDescription: '1. Tổ chức sắp xếp hệ thống bộ máy kế toán của khối văn phòng công ty một cách khoa học, tiết kiệm, hiệu quả.\n2. Phân công nghiêp vụ cho từng nhân viên trong bộ phận và hướng dẫn các kế toán viên thực hiện các nghiệp vụ thuộc phần hành của mình.',
-      jobRequirement: '1. Nắm vững cách hoạch toán tất cả các nghiệp vụ kinh tế phát sinh, nắm vững các quy định về thuế, tài chính, các chính sách chế độ khác hiện hành..\n2. Có chứng chỉ kế toán trưởng.',
-      detailAddress: 'Tang 11 toa nha CMC so 11 Duy Tan, Cau Giay, Ha Noi',
-      contactPerson: 'Phong Nhan Su',
-      companyDes: `Mytour Vietnam Company Limited was established and officially came into the OTA market since 08/2012. As an online travel agent, Mytour Vietnam specializes in providing hotel booking services, flight booking services, and tour booking services with extremely attractive rates, easy and flexible payment methods. What makes the difference of Mytour Vietnam brand is from the dedicated, professional, well-trained team and 24/24 online booking support. In addition, with many useful features on the website such as: Search vacancies, Find hotels with promotions, Find cheap hotels ... Mytour helps the customers to plan their trip in the most convenient and fastest way.
-   During the 5 years journey of establishment and development, Mytour.vn brand increasingly has become more and more a reputable brand, has been proved to be one of the best OTA in Vietnam tourism market. \n
-   With the guiding principle of “quality and trust as the foundation”, Mytour.vn will surely reach even further in the future to become the leading brand in the e-travel industry in Vietnam.\n
-   If you are an enthusiastic person who have a passion for work and have a clear career objective, Mytour is an ideal environment for you to pursue your dream and develop your career.
-   Mytour Vietnam Company Limited was established and officially came into the OTA market since 08/2012. As an online travel agent, Mytour Vietnam specializes in providing hotel booking services, flight booking services, and tour booking services with extremely attractive rates, easy and flexible payment methods. 
-   What makes the difference of Mytour Vietnam brand is from the dedicated, professional, well-trained team and 24/24 online booking support. In addition, with many useful features on the website such as: Search vacancies, Find hotels with promotions, Find cheap hotels ... Mytour helps the customers to plan their trip in the most convenient and fastest way.
-   During the 5 years journey of establishment and development, Mytour.vn brand increasingly has become more and more a reputable brand, has been proved to be one of the best OTA in Vietnam tourism market. \n
-   With the guiding principle of “quality and trust as the foundation”, Mytour.vn will surely reach even further in the future to become the leading brand in the e-travel industry in Vietnam.\n
-   If you are an enthusiastic person who have a passion for work and have a clear career objective, Mytour is an ideal environment for you to pursue your dream and develop your career. :::::::`},
-   {
-      id: 2,
-      nameJob: 'Lap Trinh Vien',
-      nameCompany: 'Cong Ty CP Cong Nghe Tin Hoc H.T.L',
-      address: 'Ha Noi',
-      fieldJob: 'IT - Software',
-      experienced: 'Non-Manager',
-      salary: '700 $',
-      date: '31/10/2018',
-      jobDescription: '1. Tổ chức sắp xếp hệ thống bộ máy kế toán của khối văn phòng công ty một cách khoa học, tiết kiệm, hiệu quả.\n2. Phân công nghiêp vụ cho từng nhân viên trong bộ phận và hướng dẫn các kế toán viên thực hiện các nghiệp vụ thuộc phần hành của mình.',
-      jobRequirement: '1. Nắm vững cách hoạch toán tất cả các nghiệp vụ kinh tế phát sinh, nắm vững các quy định về thuế, tài chính, các chính sách chế độ khác hiện hành..\n2. Có chứng chỉ kế toán trưởng.',
-      detailAddress: 'Tang 11 toa nha CMC so 11 Duy Tan, Cau Giay, Ha Noi',
-      contactPerson: 'Phong Nhan Su',
-      companyDes: `Mytour Vietnam Company Limited was established and officially came into the OTA market since 08/2012. As an online travel agent, Mytour Vietnam specializes in providing hotel booking services, flight booking services, and tour booking services with extremely attractive rates, easy and flexible payment methods. 
-      What makes the difference of Mytour Vietnam brand is from the dedicated, professional, well-trained team and 24/24 online booking support. In addition, with many useful features on the website such as: Search vacancies, Find hotels with promotions, Find cheap hotels ... Mytour helps the customers to plan their trip in the most convenient and fastest way.
-      During the 5 years journey of establishment and development, Mytour.vn brand increasingly has become more and more a reputable brand, has been proved to be one of the best OTA in Vietnam tourism market. \n
-      With the guiding principle of “quality and trust as the foundation”, Mytour.vn will surely reach even further in the future to become the leading brand in the e-travel industry in Vietnam.\n
-      If you are an enthusiastic person who have a passion for work and have a clear career objective, Mytour is an ideal environment for you to pursue your dream and develop your career.`},
-   {
-      id: 3,
-      nameJob: 'Lap Trinh Vien',
-      nameCompany: 'Cong Ty CP Cong Nghe Tin Hoc H.T.L',
-      address: 'Ha Noi',
-      fieldJob: 'IT - Software',
-      experienced: 'Non-Manager',
-      salary: '700 $',
-      date: '31/10/2018',
-      jobDescription: '1. Tổ chức sắp xếp hệ thống bộ máy kế toán của khối văn phòng công ty một cách khoa học, tiết kiệm, hiệu quả.\n2. Phân công nghiêp vụ cho từng nhân viên trong bộ phận và hướng dẫn các kế toán viên thực hiện các nghiệp vụ thuộc phần hành của mình.',
-      jobRequirement: '1. Nắm vững cách hoạch toán tất cả các nghiệp vụ kinh tế phát sinh, nắm vững các quy định về thuế, tài chính, các chính sách chế độ khác hiện hành..\n2. Có chứng chỉ kế toán trưởng.',
-      detailAddress: 'Tang 11 toa nha CMC so 11 Duy Tan, Cau Giay, Ha Noi',
-      contactPerson: 'Phong Nhan Su',
-      companyDes: `Mytour Vietnam Company Limited was established and officially came into the OTA market since 08/2012. As an online travel agent, Mytour Vietnam specializes in providing hotel booking services, flight booking services, and tour booking services with extremely attractive rates, easy and flexible payment methods. 
-         What makes the difference of Mytour Vietnam brand is from the dedicated, professional, well-trained team and 24/24 online booking support. In addition, with many useful features on the website such as: Search vacancies, Find hotels with promotions, Find cheap hotels ... Mytour helps the customers to plan their trip in the most convenient and fastest way.
-         During the 5 years journey of establishment and development, Mytour.vn brand increasingly has become more and more a reputable brand, has been proved to be one of the best OTA in Vietnam tourism market. \n
-         With the guiding principle of “quality and trust as the foundation”, Mytour.vn will surely reach even further in the future to become the leading brand in the e-travel industry in Vietnam.\n
-         If you are an enthusiastic person who have a passion for work and have a clear career objective, Mytour is an ideal environment for you to pursue your dream and develop your career.`}
-]
-
 const styles = StyleSheet.create({
    container: {
       flex: 1
@@ -155,12 +116,18 @@ const styles = StyleSheet.create({
 })
 
 const mapDispathToProps = {
-
+   savedCompanyFunc
 }
 
 const mapStateToProps = (state) => {
+   let savedCompanyList = []
+   let username = state.jobSolutions.user.username
+   if (username != '') {
+      savedCompanyList = state.jobSolutions.savedCompany[username]
+   }
    return {
-      user: state.jobSolutions.user
+      user: state.jobSolutions.user,
+      savedCompany: savedCompanyList || []
    }
 }
 

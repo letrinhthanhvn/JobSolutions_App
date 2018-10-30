@@ -14,7 +14,7 @@ import Header from '../components/header';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Button } from 'react-native-material-kit/lib/mdl';
 import moment from 'moment';
-import { savedJob } from '../redux/actions/jobSolutions';
+import { savedJob, savedCompanyFunc } from '../redux/actions/jobSolutions';
 import _ from 'lodash';
 
 class JobDetail extends PureComponent {
@@ -31,6 +31,7 @@ class JobDetail extends PureComponent {
    }
 
    async componentDidMount() {
+      console.log('componenDidMountJobDetail')
       let res = await fetch('http://localhost:3000/company/get_by_id/' + this.props.job.company_id_fk).then((res) => res.json());
       if (res.status == 'SUCCESS') {
          console.log('SUCCESS')
@@ -38,8 +39,9 @@ class JobDetail extends PureComponent {
             companyInfor: res.company,
             companyUser: res.company_user
          })
+         console.log('company', res.company, 'companyUser', res.company_user)
       } else {
-
+         console.log('fetch failed')
       }
       // this.checkSavedJob()
    }
@@ -78,15 +80,15 @@ class JobDetail extends PureComponent {
    // }
 
    renderJobName = () => {
-      console.log('savedJobsList:::::::::::::', this.props.savedJobs)
       const { job } = this.props
       const { companyInfor } = this.state
       return (
          <View style={{ width: '100%', height: 85, borderBottomColor: 'rgba(0, 0, 0, 0.3)', borderBottomWidth: 1, paddingLeft: 10 }}>
             <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
                <Text style={{ fontSize: 20, fontWeight: '600', color: '#429ef4' }}>{job.work_name}</Text>
-               <ButtonIcon iconName={_.includes(this.props.savedJobs, job.recruitment_id) ? 'favorite' : 'favorite-border'} iconColor="gray"
-                  onPress={() => this.savedJob(job.recruitment_id)}
+               <ButtonIcon iconName={this.props.savedJobs.length == 0 ? 'favorite-border' : this.props.savedJobs.find(e => e.recruitment_id == job.recruitment_id) ? 'favorite' : 'favorite-border'}
+                  iconColor={this.props.savedJobs.length == 0 ? 'gray' : this.props.savedJobs.find(e => e.recruitment_id == job.recruitment_id) ? 'rgb(244, 66, 98)' : 'gray'}
+                  onPress={() => this.savedJob(job)}
                />
             </View>
             <View style={{ marginTop: 10 }}>
@@ -104,14 +106,6 @@ class JobDetail extends PureComponent {
                <Icon name='location-on' size={24} color='gray' />
                <Text style={{ fontSize: 18, color: 'rgba(0, 0, 0, 0.7)', paddingLeft: 10 }}>{job.location}</Text>
             </View>
-            {/* <View style={styles.rowInBelowJobName}>
-               <Icon name='receipt' size={24} color='gray' />
-               <Text style={{ fontSize: 18, color: 'gray', paddingLeft: 10 }}>{data.fieldJob}</Text>
-            </View> */}
-            {/* <View style={styles.rowInBelowJobName}>
-               <Icon name='explore' size={24} color='gray' />
-               <Text style={{ fontSize: 18, color: 'gray', paddingLeft: 10 }}>{data.experienced}</Text>
-            </View> */}
             <View style={styles.rowInBelowJobName}>
                <Icon name='attach-money' size={24} color='gray' />
                <Text style={{ fontSize: 18, color: 'rgba(0, 0, 0, 0.7)', paddingLeft: 10 }}>Min: {job.min_salary}$</Text>
@@ -182,7 +176,7 @@ class JobDetail extends PureComponent {
    renderCompanyInfor = () => {
       const { companyInfor } = this.state
       const companyUserContact = this.state.companyUser.length > 0 ? this.state.companyUser[0] : {}
-      const { job } = this.props
+      const { job, savedCompany } = this.props
       // console.log('companyUserContact', this.state.companyUser || this.)
       return (
          <View style={{ marginTop: 10 }}>
@@ -190,10 +184,10 @@ class JobDetail extends PureComponent {
             <View style={{ marginTop: 15 }}>
                <Text style={{ fontSize: 18, color: 'black', paddingLeft: 10, fontWeight: '500' }}>{companyInfor.company_name}</Text>
                <View style={{ width: '100%', height: 60, alignItems: 'center', justifyContent: 'center', marginTop: 10, }}>
-                  <Button style={{ width: 100, height: 50, backgroundColor: 'rgba(0, 0, 0, 0.2)', alignItems: 'center', justifyContent: 'center', borderWidth: this.state.isFollowed ? 2 : 0, borderColor: this.state.isFollowed ? '#429ef4' : null, borderRadius: 5 }}
-                     // onPress={() => this.clickFollow(job.recruitment_id)}
+                  <Button style={{ width: 100, height: 50, backgroundColor: savedCompany.find(e => e.company_id == job.company_id_fk) ? '#9AC230' : 'rgba(0, 0, 0, 0.2)', alignItems: 'center', justifyContent: 'center', borderWidth: this.state.isFollowed ? 2 : 0, borderColor: this.state.isFollowed ? '#429ef4' : null, borderRadius: 5 }}
+                     onPress={this.savedCompanyAct}
                   >
-                     <Text style={{ fontSize: 18, color: this.state.isFollowed ? '#429ef4' : "white" }}>{this.state.isFollowed ? ' Followed' : '+ Follow'}</Text>
+                     <Text style={{ fontSize: 18, color: savedCompany.find(e => e.company_id == job.company_id_fk) ? 'white' : "black" }}>{savedCompany.find(e => e.company_id == job.company_id_fk) ? ' Followed' : '+ Follow'}</Text>
                   </Button>
                </View>
             </View>
@@ -247,61 +241,25 @@ class JobDetail extends PureComponent {
       )
    }
 
-   // clickFollow = async (recruitment_id) => {
-   //    if (!this.state.isFollowed) {
-   //       let resUnfollow = await fetch('http://localhost:3000/users/del_rec_by_candidate', {
-   //          method: 'POST',
-   //          headers: {
-   //             'Accept': 'application/json',
-   //             'Content-Type': 'application/json'
-   //          },
-   //          body: JSON.stringify({
-   //             candidate_id: this.props.user.candidate_id,
-   //             recruitment_id: recruitment_id
-   //          })
-   //       })
-   //       if (resUnfollow.status == "SUCCESS") {
-   //          // yield put(loginSuccess(action.payload))
-   //          this.setState({
-   //             isFollowed: !this.state.isFollowed
-   //          })
-   //       } else {
-   //          // yield put(loginFailed())
-   //          console.log('unfollow failed')
-   //       }
-   //    } else {
-   //       let resFollow = await fetch('http://localhost:3000/users/candidate_save_rec', {
-   //          method: 'POST',
-   //          headers: {
-   //             'Accept': 'application/json',
-   //             'Content-Type': 'application/json'
-   //          },
-   //          body: JSON.stringify({
-   //             candidate_id: this.props.user.candidate_id,
-   //             recruitment_id: recruitment_id
-   //          })
-   //       })
-   //       if (resFollow.status == "SUCCESS") {
-   //          // yield put(loginSuccess(action.payload))
-   //          this.setState({
-   //             isFollowed: !this.state.isFollowed
-   //          })
-   //       } else {
-   //          // yield put(loginFailed())
-   //          console.log('Follow failed')
-   //       }
-   //    }
-   // }
-
-   savedJob = (recruitment_id) => {
+   savedCompanyAct = () => {
+      const { company_id_fk } = this.props.job
       const { username } = this.props.user
       if (this.props.user.username != '') {
-         this.props.savedJob({username, recruitment_id})
+         this.props.savedCompanyFunc({ username: username, company: { company_id: company_id_fk, nameCompany: this.state.companyInfor.company_name } })
+      } else {
+         alert('Bạn chưa đăng nhập!')
+      }
+   }
+
+   savedJob = (job) => {
+      const { username } = this.props.user
+      if (this.props.user.username != '') {
+         this.props.savedJob({ username: username, job: { recruitment_id: job.recruitment_id, work_name: job.work_name, location: job.location, industry_id: this.props.industry_id, deadline: moment(job.deadline).format('YYYY-MM-DD') } })
          console.log('savedJobs', this.props.savedJobs)
       } else {
          alert('Bạn chưa đăng nhập!')
       }
-   }  
+   }
 }
 
 const data = {
@@ -345,20 +303,26 @@ const styles = StyleSheet.create({
 })
 
 const mapDispatchToProps = {
-   savedJob
+   savedJob, savedCompanyFunc
 }
 
 const mapStateToProps = (state) => {
    let savedJobsList = []
+   let savedCompanyList = []
    let savedJobs = state.jobSolutions.savedJobs
+   let savedCompany = state.jobSolutions.savedCompany
    let username = state.jobSolutions.user.username
    if (savedJobs && username != '') {
       // console.log('savedJobs[username]', savedJobs[username])
       savedJobsList = savedJobs[username]
    }
+   if (savedCompany && username != '') {
+      savedCompanyList = savedCompany[username]
+   }
    return {
       user: state.jobSolutions.user,
-      savedJobs: savedJobsList
+      savedJobs: savedJobsList || [],
+      savedCompany: savedCompanyList || []
    }
 }
 
