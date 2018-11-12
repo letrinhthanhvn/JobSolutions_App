@@ -12,6 +12,7 @@ import ButtonIcon from '../components/ButtonIcon';
 import { Actions } from 'react-native-router-flux';
 import moment from 'moment';
 import { savedJob } from '../redux/actions/jobSolutions';
+import { mainColor } from '../common/colorBG';
 class SavedJobs extends PureComponent {
 
    constructor(props) {
@@ -116,7 +117,7 @@ class SavedJobs extends PureComponent {
          'Are you sure delete this job?',
          [
             { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-            { text: 'OK', onPress: () => this.props.savedJob({ username: this.props.user.username, job: job }) },
+            { text: 'OK', onPress: () => this.props.savedJob({ candidate_id: this.props.user.candidate_id, job: job }) },
          ],
          { cancelable: false }
       )
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
    headerTop: {
       width: '100%',
       height: 50,
-      backgroundColor: '#9AC230',
+      backgroundColor: mainColor,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center'
@@ -164,11 +165,11 @@ const mapDispatchToProps = {
 const mapStateToProps = (state, props) => {
 
    let savedJobs = state.jobSolutions.savedJobs
-   let username = state.jobSolutions.user.username
+   let candidate_id = state.jobSolutions.user.candidate_id
    let savedJobsList = []
 
-   if (savedJobs && username != '') {
-      savedJobsList = savedJobs[username]
+   if (savedJobs && candidate_id != null) {
+      savedJobsList = savedJobs[candidate_id]
    }
 
    return {

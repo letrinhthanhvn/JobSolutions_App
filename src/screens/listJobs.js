@@ -4,13 +4,17 @@ import {
    Text,
    FlatList,
    TouchableOpacity,
-   StyleSheet
+   StyleSheet,
+   TouchableHightLight
 } from 'react-native';
 import { connect } from 'react-redux';
 import ButtonIcon from '../components/ButtonIcon';
 import { Actions } from 'react-native-router-flux';
 import moment from 'moment';
-
+import { mainColor } from '../common/colorBG';
+import StarRating from 'react-native-star-rating';
+import Search from 'react-native-search-box';
+import _ from 'lodash';
 class ListJobs extends PureComponent {
 
    constructor(props) {
@@ -43,9 +47,6 @@ class ListJobs extends PureComponent {
                <Text style={[styles.textPerField, { color: '#429ef4', fontWeight: 'bold', width: '75%' }]} numberOfLines={1}>{item.work_name}</Text>
             </View>
             <View style={{ marginTop: 5 }}>
-               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.7)', fontWeight: 'bold', fontSize: 18 }]}>{item.company_id_fk}</Text>
-            </View>
-            <View style={{ marginTop: 5 }}>
                <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 0.5)', width: '75%', fontSize: 18 }]} numberOfLines={1}>{item.location}</Text>
             </View>
             <View style={styles.viewSalary}>
@@ -55,7 +56,18 @@ class ListJobs extends PureComponent {
                <Text style={[styles.textPerField, styles.deadline]}>OutOfDate: {moment(item.deadline).format('YYYY-MM-DD')}</Text>
             </View>
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 1)', fontSize: 18 }]}>Danh gia: 4.7/5</Text>
+               {/* <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 1)', fontSize: 18 }]}>Danh gia: 4.7/5</Text> */}
+               <StarRating
+                  disabled={false}
+                  maxStars={5}
+                  emptyStar={'ios-star-outline'}
+                  fullStar={'ios-star'}
+                  halfStar={'ios-star-half'}
+                  iconSet={'Ionicons'}
+                  rating={4}
+                  fullStarColor={mainColor}
+               // selectedStar={(rating) => this.onStarRatingPress(rating)}
+               />
             </View>
          </TouchableOpacity>
       )
@@ -79,10 +91,15 @@ class ListJobs extends PureComponent {
       const { listJobs } = this.state
       console.log('this.props', this.props)
       return (
-         <View style={{ flex: 1 }}>
+         <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.1)' }}>
             {
                this.renderTop()
             }
+            <Search
+               ref="search_box"
+               onChangeText={(text) => this.onChangeText(text)}
+               onSearch={(text) => this.search(text)}
+            />
             <FlatList
                data={listJobs}
                renderItem={this.renderField}
@@ -114,13 +131,69 @@ class ListJobs extends PureComponent {
       // alert('Ban chua dang nhap')
       // }
    }
+
+   // renderRow = (item, sectionId, index) => {
+   //    return (
+   //      <TouchableHightLight
+   //        style={{
+   //          height: rowHeight,
+   //          justifyContent: 'center',
+   //          alignItems: 'center'}}
+   //      >
+   //        <Text>{item.name}</Text>
+   //      </TouchableHightLight>
+   //    );
+   //  }
+
+   // Important: You must return a Promise
+   beforeFocus = () => {
+      return new Promise((resolve, reject) => {
+         console.log('beforeFocus');
+         resolve();
+      });
+   }
+
+   // Important: You must return a Promise
+   onFocus = (text) => {
+      return new Promise((resolve, reject) => {
+         console.log('onFocus', text);
+         resolve();
+      });
+   }
+
+   // Important: You must return a Promise
+   afterFocus = () => {
+      return new Promise((resolve, reject) => {
+         console.log('afterFocus');
+         resolve();
+      });
+   }
+
+   // onchangeText
+   onChangeText = (text) => {
+      console.log('text', text)
+   }
+ 
+   // search
+   search = async (text) => {
+      let jobs =  this.state.listJobs.filter(job => job.work_name.toLowerCase().includes(text.toLowerCase()))
+      setTimeout(() => {
+         // console.log('jobsSearch,::::::', jobs)
+         if (jobs.length > 0) {
+            Actions.resultSearch({ listJobsSearch: jobs })
+         } else {
+            alert('Khong tim thay cong viec can tim!')
+         }
+      }, 200)
+   }
+
 }
 
 const styles = StyleSheet.create({
    headerTop: {
       width: '100%',
       height: 50,
-      backgroundColor: '#9AC230',
+      backgroundColor: mainColor,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center'
@@ -134,14 +207,14 @@ const styles = StyleSheet.create({
    rowStyle: {
       width: '100%', height: 185,
       paddingLeft: 10,
-      borderBottomColor: 'rgba(0, 0, 0, 0.1)',
-      borderBottomWidth: 8, paddingTop: 3
+      paddingTop: 3,
+      backgroundColor: 'white',
+      marginBottom: 8
    },
 
    viewSalary: {
       width: '100%',
       height: 40,
-      // justifyContent: 'space-between',
       alignItems: 'center',
       flexDirection: 'row',
       paddingRight: 10,
@@ -155,7 +228,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state, props) => {
 
    return {
-      userName: state.jobSolutions.userName
+      // userName: state.jobSolutions.userName
    }
 }
 

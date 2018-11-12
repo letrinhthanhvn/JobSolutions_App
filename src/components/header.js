@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import ButtonIcon from '../components/ButtonIcon';
 import { Actions } from 'react-native-router-flux';
-
+import { mainColor } from '../common/colorBG';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default class Header extends PureComponent {
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
    container: {
       width: SCREEN_WIDTH,
       height: 50,
-      backgroundColor: '#9AC230',
+      backgroundColor: mainColor,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between'

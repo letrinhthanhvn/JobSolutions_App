@@ -191,13 +191,13 @@ class Login extends PureComponent {
          alert("Bạn chưa điền mật khẩu!") 
       } else {
          this.props.login({ username: this.state.userName, password: this.state.passWord })
-         setTimeout(() => {
-            if (!this.props.isLogin && this.props.user.username == '') {
-               alert('Tài khoản hoặc mật khẩu không đúng!')
-            } else if (!this.props.isLogin && this.props.user.username != '') {
-               Actions.listField()
-            }
-         }, 200)
+         // setTimeout(() => {
+         //    if (this.props.user.candidate_id == null) {
+         //       alert('Tài khoản hoặc mật khẩu không đúng!')
+         //    } else if (this.props.user.candidate_id != null) {
+         //       Actions.listField()
+         //    }
+         // }, 200)
       }
    }
 }

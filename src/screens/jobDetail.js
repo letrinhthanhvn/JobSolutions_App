@@ -16,6 +16,7 @@ import { Button } from 'react-native-material-kit/lib/mdl';
 import moment from 'moment';
 import { savedJob, savedCompanyFunc } from '../redux/actions/jobSolutions';
 import _ from 'lodash';
+import { mainColor } from '../common/colorBG';
 
 class JobDetail extends PureComponent {
 
@@ -184,7 +185,7 @@ class JobDetail extends PureComponent {
             <View style={{ marginTop: 15 }}>
                <Text style={{ fontSize: 18, color: 'black', paddingLeft: 10, fontWeight: '500' }}>{companyInfor.company_name}</Text>
                <View style={{ width: '100%', height: 60, alignItems: 'center', justifyContent: 'center', marginTop: 10, }}>
-                  <Button style={{ width: 100, height: 50, backgroundColor: savedCompany.find(e => e.company_id == job.company_id_fk) ? '#9AC230' : 'rgba(0, 0, 0, 0.2)', alignItems: 'center', justifyContent: 'center', borderWidth: this.state.isFollowed ? 2 : 0, borderColor: this.state.isFollowed ? '#429ef4' : null, borderRadius: 5 }}
+                  <Button style={{ width: 100, height: 50, backgroundColor: savedCompany.find(e => e.company_id == job.company_id_fk) ? mainColor : 'rgba(0, 0, 0, 0.2)', alignItems: 'center', justifyContent: 'center', borderWidth: this.state.isFollowed ? 2 : 0, borderColor: this.state.isFollowed ? '#429ef4' : null, borderRadius: 5 }}
                      onPress={this.savedCompanyAct}
                   >
                      <Text style={{ fontSize: 18, color: savedCompany.find(e => e.company_id == job.company_id_fk) ? 'white' : "black" }}>{savedCompany.find(e => e.company_id == job.company_id_fk) ? ' Followed' : '+ Follow'}</Text>
@@ -243,18 +244,19 @@ class JobDetail extends PureComponent {
 
    savedCompanyAct = () => {
       const { company_id_fk } = this.props.job
-      const { username } = this.props.user
-      if (this.props.user.username != '') {
-         this.props.savedCompanyFunc({ username: username, company: { company_id: company_id_fk, nameCompany: this.state.companyInfor.company_name } })
+      const { candidate_id } = this.props.user
+      if (this.props.user.candidate_id != null) {
+         this.props.savedCompanyFunc({ candidate_id: candidate_id, company: { company_id: company_id_fk, nameCompany: this.state.companyInfor.company_name } })
       } else {
          alert('Bạn chưa đăng nhập!')
       }
    }
 
    savedJob = (job) => {
-      const { username } = this.props.user
-      if (this.props.user.username != '') {
-         this.props.savedJob({ username: username, job: { recruitment_id: job.recruitment_id, work_name: job.work_name, location: job.location, industry_id: this.props.industry_id, deadline: moment(job.deadline).format('YYYY-MM-DD') } })
+      const { candidate_id } = this.props.user
+      
+      if (this.props.user.candidate_id != '') {
+         this.props.savedJob({ candidate_id: candidate_id, job: { recruitment_id: job.recruitment_id, work_name: job.work_name, location: job.location, industry_id: this.props.industry_id, deadline: moment(job.deadline).format('YYYY-MM-DD') } })
          console.log('savedJobs', this.props.savedJobs)
       } else {
          alert('Bạn chưa đăng nhập!')
@@ -311,13 +313,13 @@ const mapStateToProps = (state) => {
    let savedCompanyList = []
    let savedJobs = state.jobSolutions.savedJobs
    let savedCompany = state.jobSolutions.savedCompany
-   let username = state.jobSolutions.user.username
-   if (savedJobs && username != '') {
-      // console.log('savedJobs[username]', savedJobs[username])
-      savedJobsList = savedJobs[username]
+   let candidate_id = state.jobSolutions.user.candidate_id
+   if (savedJobs && candidate_id != null) {
+      // console.log('savedJobs[candidate_id]', savedJobs[candidate_id])
+      savedJobsList = savedJobs[candidate_id]
    }
-   if (savedCompany && username != '') {
-      savedCompanyList = savedCompany[username]
+   if (savedCompany && candidate_id != null) {
+      savedCompanyList = savedCompany[String(candidate_id)]
    }
    return {
       user: state.jobSolutions.user,

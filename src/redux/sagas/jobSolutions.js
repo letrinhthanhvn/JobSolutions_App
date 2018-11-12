@@ -6,13 +6,20 @@ import {
    fetchIndustrySuccess,
    fetchIndustryFailed,
    registerSuccess,
-   registerFailed
-} from '../actions/jobSolutions'
+   registerFailed,
+   getCandidateIdLocalSuccess,
+   getCandidateIdLocalFailed,
+   savedUserIntroSuccess,
+   savedUserIntroFailed
+} from '../actions/jobSolutions';
+import { AsyncStorage } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 
 /**
 * 
 */
 function* sagaLogin(action) {
+   console.log('sagaLogin', action)
    try {
       let res = yield fetch('http://localhost:3000/users/signin_candidate', {
          method: 'POST',
@@ -27,11 +34,14 @@ function* sagaLogin(action) {
          })
       }).then((res) => res.json())
       if (res.status == "SUCCESS") {
-         console.log('sagaLogin', res)
-         yield put(loginSuccess({username: action.payload.username, password: action.payload.password, candidate_id: res.candidate.candidate_id}))
+         yield put(loginSuccess({ candidate_id: res.candidate.candidate_id }))
+         yield AsyncStorage.setItem('candidate_id', JSON.stringify(res.candidate.candidate_id))
+         yield Actions.listField()
       } else {
          yield put(loginFailed())
-      } 
+         yield alert('Đăng nhập thất bại! Bạn vui lòng thử lại!')
+         console.log('Login failed::::::::')
+      }
    } catch (e) {
       console.log('Catche Login', e)
       yield put(loginFailed())
@@ -85,7 +95,7 @@ export function* watchLogin() {
 */
 function* sagaRegister(action) {
    try {
-      let res = yield fetch('http://localhost:3000/users/register_candidate',  {
+      let res = yield fetch('http://localhost:3000/users/register_candidate', {
          method: 'POST',
          headers: {
             'Accept': 'application/json',
@@ -104,13 +114,53 @@ function* sagaRegister(action) {
          yield put(registerFailed())
       }
       console.log('resRegister', res)
-   } catch(e) {
-    console.log('Catche Register', e)
+   } catch (e) {
+      console.log('Catche Register', e)
    }
 }
 
 export function* watchRegister() {
    yield takeLatest(types.REGISTER, sagaRegister)
 }
+
+/**
+* 
+*/
+function* sagaSavedUserIntro(action) {
+   console.log("payload saved User intro", action.payload)
+   try {
+      let res = yield fetch('http://localhost:3000/users/update_can_info', {
+         method: 'POST',
+         headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+         },
+         body: JSON.stringify({
+            candidate: {
+               candidate_id: action.payload.candidate_id,
+               phone: action.payload.phone
+            },
+            career_info: {
+               industry_id_fk: 1,
+               career_goal: action.payload.career_goal
+            }
+         })
+      }).then((res) => res.json())
+      if (res.status == "SUCCESS") {
+         console.log('res', res)
+         yield put(savedUserIntroSuccess(action.payload))
+      } else {
+         console.log("failed user introduce!")
+         yield put(savedUserIntroFailed)
+      }
+   } catch (e) {
+      console.log('Catche SavedUserInfor', e)
+   }
+}
+
+export function* watchSavedUserInfor() {
+   yield takeLatest(types.SAVEDUSERINTRO, sagaSavedUserIntro)
+}
+
 
 

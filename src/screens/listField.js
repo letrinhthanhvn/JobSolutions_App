@@ -11,18 +11,7 @@ import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import HeaderMain from '../components/headerMain';
 import { fetchIndustry } from '../redux/actions/jobSolutions';
-const data = [
-   { id: 1, field: 'CNTT - Phan mem' },
-   { id: 2, field: 'CNTT - Phan cung / Mang' },
-   { id: 3, field: 'Buu chinh vien thong' },
-   { id: 4, field: 'Bat dong san' },
-   { id: 5, field: 'Chung khoan' },
-   { id: 6, field: 'Co khi / O to / Tu dong hoa' },
-   { id: 7, field: 'Du lich' },
-   { id: 8, field: 'Dau khi' },
-   { id: 9, field: 'Hang hai' },
-   { id: 10, field: 'Giai tri' },
-]
+import { mainColor } from '../common/colorBG';
 
 class ListField extends PureComponent {
 
@@ -36,17 +25,6 @@ class ListField extends PureComponent {
 
    async componentDidMount() {
       let res = await fetch('http://localhost:3000/industry/get_industry_list').then((res) => res.json());
-      // let resSavedCompany = await fetch('http://localhost:3000/users/candidate_save_rec', {
-      //    method: 'POST',
-      //    headers: {
-      //       'Accept': 'application/json',
-      //       'Content-Type': 'application/json'
-      //    },
-      //    body: JSON.stringify({
-      //       candidate_id: 1,
-      //       recruitment_id: 1,
-      //    })
-      // })
       if (res.status == 'SUCCESS') {
          this.setState({
             industryList: res.results
@@ -85,7 +63,7 @@ const styles = StyleSheet.create({
    headerTop: {
       width: '100%',
       height: 50,
-      backgroundColor: '#9AC230',
+      backgroundColor: mainColor,
       alignItems: 'center',
       justifyContent: 'center'
    },

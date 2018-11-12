@@ -1,10 +1,9 @@
 import * as types from '../types';
 import _ from 'lodash';
+import { AsyncStorage } from 'react-native';
 
 const initialState = {
    user: {
-      username: '',
-      password: '',
       candidate_id: null,
    },
    isLogin: false,
@@ -18,6 +17,11 @@ const initialState = {
    isRegister: false,
    savedCompany: {
 
+   },
+   userIntro: {
+      // 2: {
+      //    name: "thanh letrinh", minSalary: '', maxSalary: '', email: "", phone: '', degree: '', address: ""
+      // }
    }
 }
 
@@ -31,10 +35,8 @@ export default function jobSolutions(state = initialState, action) {
       }
 
       case types.LOGIN_SUCCESS: {
-         console.log('userName', action.payload)
+         console.log('LOGIN_SUCCESS', action.payload.candidate_id)
          let user = {
-            username: action.payload.username,
-            password: action.payload.password,
             candidate_id: action.payload.candidate_id
          }
          return {
@@ -53,20 +55,18 @@ export default function jobSolutions(state = initialState, action) {
 
       case types.SAVEDJOBS: {
          // this.props.savedjobs(username, { recuitment_id: 1, jobName: '', location: '', industry_id: 1, deadline:})
-         const { username, job } = action.payload
-
-         // console.log('username, recruitment_id', username, recruitment_id)
+         const { candidate_id, job } = action.payload
 
          let savedJobs = { ...state.savedJobs }
-         if (!savedJobs[username]) {
-            savedJobs[username] = [job]
+         if (!savedJobs[candidate_id]) {
+            savedJobs[candidate_id] = [job]
          } else {
-            if (savedJobs[username].find(e => e.recruitment_id == job.recruitment_id)) {
+            if (savedJobs[candidate_id].find(e => e.recruitment_id == job.recruitment_id)) {
                console.log('delete favorite')
-               savedJobs[username] = savedJobs[username].filter(e => e.recruitment_id != job.recruitment_id)
-               console.log('mang saved job', savedJobs[username].filter(job => job.recruitment_id != job.recruitment_id))
+               savedJobs[candidate_id] = savedJobs[candidate_id].filter(e => e.recruitment_id != job.recruitment_id)
+               console.log('mang saved job', savedJobs[candidate_id].filter(job => job.recruitment_id != job.recruitment_id))
             } else {
-               savedJobs[username] = savedJobs[username].concat([job])
+               savedJobs[candidate_id] = savedJobs[candidate_id].concat([job])
             }
          }
 
@@ -77,16 +77,16 @@ export default function jobSolutions(state = initialState, action) {
       }
 
       case types.SAVEDCOMPANY: {
-         const { username, company } = action.payload
+         const { candidate_id, company } = action.payload
 
          let savedCompany = { ...state.savedCompany }
-         if (!savedCompany[username]) {
-            savedCompany[username] = [company]
+         if (!savedCompany[String(candidate_id)]) {
+            savedCompany[String(candidate_id)] = [company]
          } else {
-            if (savedCompany[username].find(e => e.company_id == company.company_id)) {
-               savedCompany[username] = savedCompany[username].filter(e => e.company_id != company.company_id)
+            if (savedCompany[String(candidate_id)].find(e => e.company_id == company.company_id)) {
+               savedCompany[String(candidate_id)] = savedCompany[String(candidate_id)].filter(e => e.company_id != company.company_id)
             } else {
-               savedCompany[username] = savedCompany[username].concat([company])
+               savedCompany[String(candidate_id)] = savedCompany[String(candidate_id)].concat([company])
             }
          }
 
@@ -95,6 +95,39 @@ export default function jobSolutions(state = initialState, action) {
             savedCompany
          }
       }
+
+      case types.SAVEDUSERINTRO: {
+         console.log('reduce saved user intro', action.payload)
+         const { candidate_id } = action.payload
+         // name, minSalary, maxSalary, email, phone, degree, address
+
+         let userIntro = {...state.userIntro}
+
+         if (!userIntro[candidate_id]) {
+            userIntro[candidate_id] = action.payload
+         } else {
+            userIntro[candidate_id] = action.payload
+         }
+
+         return {
+            ...state,
+            userIntro
+         }
+      }
+
+      // case types.GETCANDIDATEID_SUCCESS: {
+      //    let localCandidateId = AsyncStorage.getItem('candidate_id')
+      //    let user = {...state.user}
+      //    if (localCandidateId) {
+      //       user.candidate_id = action.payload
+      //    } else {
+
+      //    }
+      //    return {
+      //       ...state,
+      //       user
+      //    }
+      // }
 
       default:
          return state

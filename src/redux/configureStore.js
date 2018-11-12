@@ -1,11 +1,11 @@
-
 import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware, { runSaga } from 'redux-saga';
 import { createLogger } from 'redux-logger';
 import reducer from './reducers';
 import sagas from './sagas';
-import { persistStore } from 'redux-persist';
-
+import { persistStore, persistReducer } from 'redux-persist';
+import { AsyncStorage } from 'react-native';
+import storage from 'redux-persist/lib/storage';
 import * as types from './types';
 
 const isDebuggingInChrome = __DEV__ && !!window.navigator.userAgent;
@@ -18,7 +18,7 @@ var logger = createLogger({
 
 const sagaMiddleware = createSagaMiddleware();
 
-const store = createStore(
+export const store = createStore(
    reducer,
    undefined,
    compose(
@@ -26,18 +26,22 @@ const store = createStore(
    )
 );
 
-export default configureStore = (onCompletion = () => { }) => {
-   persistStore(
-      store,
-      undefined,
-      onCompletion 
-   );
+sagaMiddleware.run(sagas);
 
-   sagaMiddleware.run(sagas);
+// export default configureStore = (onCompletion = () => { }) => {
+//    persistStore(
+//       store,
+//       undefined,
+//       onCompletion 
+//    );
 
-   return store;
-}
+//    sagaMiddleware.run(sagas);
 
-export {
-   store
-}
+//    return store;
+// }
+
+// export const {
+//    store
+// };
+
+export const persistor = persistStore(store);

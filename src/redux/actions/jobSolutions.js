@@ -83,3 +83,44 @@ export const savedCompanyFailed = () => {
       type: types.SAVEDCOMPANY_FAILED
    }
 }
+
+// get local candidate_id
+export const getCandidateIdLocal = (data) => {
+   return {
+      type: types.GETCANDIDATEID,
+      payload: data
+   }
+}
+
+export const getCandidateIdLocalSuccess = (data) => {
+   return {
+      type: types.GETCANDIDATEID_SUCCESS,
+      payload: data
+   }
+}
+
+export const getCandidateIdLocalFailed = () => {
+   return {
+      type: types.GETCANDIDATEID_FAILED
+   }
+}
+
+export const savedUserIntro = (data) => {
+   return {
+      type: types.SAVEDUSERINTRO,
+      payload: data
+   }
+}
+
+export const savedUserIntroSuccess = (data) => {
+   return {
+      type: types.SAVEDUSERINTRO_SUCCESS,
+      payload: data
+   }
+}
+
+export const savedUserIntroFailed = () => {
+   return {
+      type: types.SAVEDUSERINTRO_FAILED
+   }
+}

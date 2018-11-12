@@ -2,12 +2,14 @@ import React, { PureComponent } from 'react';
 
 import {
    View,
-   StatusBar
+   StatusBar,
+   ActivityIndicator
 } from 'react-native';
 
 import { Provider } from 'react-redux';
 import App from '../App';
-import configureStore from './redux/configureStore';
+import { store, persistor, configureStore } from './redux/configureStore';
+import { PersistGate } from 'redux-persist/integration/react';
 
 export default class Setup extends PureComponent {
    constructor(props) {
@@ -15,24 +17,38 @@ export default class Setup extends PureComponent {
 
       this.state = {
          // isLoading: true,
-         store: configureStore(() => {
-            
-         })
+         // store: configureStore(() => {
+
+         // })
       }
    }
 
+   renderLoading = () => {
+      return (
+         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator size='large' />
+         </View>
+      )
+   }
+
    render() {
-      let { isLoading, store } = this.state;
+      // let { isLoading, store } = this.state;
 
       // if (isLoading) {
-      //    return <Loading backgroundColor={common().BACKGROUND_GRADIENT1} colorIndicator={common().COLOR_INDICATOR} />
+      //    return (
+      //       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      //          <ActivityIndicator size='large' />
+      //       </View>
+      //    )
       // }
 
       return (
          <View style={{ flex: 1 }}>
-            <StatusBar hidden/>
+            <StatusBar hidden />
             <Provider store={store}>
-               <App />
+               <PersistGate persistor={persistor} loading={this.renderLoading()}>
+                  <App />
+               </PersistGate>
             </Provider>
          </View>
       );

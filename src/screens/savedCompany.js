@@ -93,7 +93,7 @@ class SavedCompany extends PureComponent {
          'Are you sure delete this company?',
          [
             { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-            { text: 'OK', onPress: () => this.props.savedCompanyFunc({ username: this.props.user.username, company: company }) },
+            { text: 'OK', onPress: () => this.props.savedCompanyFunc({ candidate_id: this.props.user.candidate_id, company: company }) },
          ],
          { cancelable: false }
       )
@@ -121,9 +121,9 @@ const mapDispathToProps = {
 
 const mapStateToProps = (state) => {
    let savedCompanyList = []
-   let username = state.jobSolutions.user.username
-   if (username != '') {
-      savedCompanyList = state.jobSolutions.savedCompany[username]
+   let candidate_id = state.jobSolutions.user.candidate_id
+   if (candidate_id != null) {
+      savedCompanyList = state.jobSolutions.savedCompany[candidate_id]
    }
    return {
       user: state.jobSolutions.user,

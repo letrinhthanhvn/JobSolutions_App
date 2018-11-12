@@ -14,6 +14,7 @@ import { Button } from 'react-native-material-kit/lib/mdl';
 import _ from 'lodash';
 import Modal from 'react-native-modal';
 import Drawer from './Drawer';
+import { mainColor } from '../common/colorBG';
 
 const width = Dimensions.get('window').width;
 
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      backgroundColor: '#9AC230'
+      backgroundColor: mainColor
    },
 
    leftIconHeader: {
@@ -125,6 +126,7 @@ const styles = StyleSheet.create({
    viewDrawer: {
       flex: 1,
       padding: 0,
-      margin: 0
+      margin: 0,
+      height: '100%'
    },
 })
