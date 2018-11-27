@@ -36,11 +36,25 @@ class ListField extends PureComponent {
 
    renderField = ({ item, index }) => {
       return (
-         <TouchableOpacity style={styles.btnStyle}
-            onPress={() => Actions.listJobs({ id: item.industry_id, fieldName: item.name })}
-         >
-            <Text style={styles.textPerField}>{item.name}</Text>
-         </TouchableOpacity>
+         // <View style={{
+         //    paddingLeft: 15,
+         //    width: '100%',
+         //    height: 45,
+         //    justifyContent: 'center',
+         //    shadowOffset: { width: 0, height: 2 },
+         //    shadowOpacity: 0.8,
+         //    shadowRadius: 2,
+         //    elevation: 1,
+         //    marginLeft: 5,
+         //    marginRight: 5,
+         //    marginTop: 10,
+         // }}>
+            <TouchableOpacity style={styles.btnStyle}
+               onPress={() => Actions.listJobs({ id: item.industry_id, fieldName: item.name })}
+            >
+               <Text style={styles.textPerField}>{item.name}</Text>
+            </TouchableOpacity>
+         // </View>
       )
    }
 
@@ -74,12 +88,18 @@ const styles = StyleSheet.create({
    },
 
    btnStyle: {
-      paddingLeft: 15,
-      width: '100%',
-      height: 45,
-      justifyContent: 'center',
-      borderBottomColor: 'gray',
-      borderBottomWidth: 1
+      width: '100%', height: 45,
+      paddingLeft: 10,
+      paddingTop: 3,
+      backgroundColor: 'white',
+      marginBottom: 8,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.8,
+      shadowRadius: 2,
+      elevation: 1,
+      marginLeft: 5,
+      marginRight: 5,
+      marginTop: 5,
    }
 })
 

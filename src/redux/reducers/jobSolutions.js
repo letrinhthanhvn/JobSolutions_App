@@ -22,6 +22,9 @@ const initialState = {
       // 2: {
       //    name: "thanh letrinh", minSalary: '', maxSalary: '', email: "", phone: '', degree: '', address: ""
       // }
+   },
+   rating: {
+
    }
 }
 
@@ -128,6 +131,30 @@ export default function jobSolutions(state = initialState, action) {
       //       user
       //    }
       // }
+      case types.SENDRATING: {
+         // let rating = {...state.rating}
+         
+         return {
+            ...state
+         }
+      }
+
+      case types.SENDRATING_SUCCESS: {
+         let rating = {...state.rating}
+         let user = {...state.user}
+         let job = action.payload
+         console.log('SENDRATING_SUCCESS:::::::::::', job)
+         if (!rating[user.candidate_id]) {
+            rating[user.candidate_id] = [job]
+         } else {
+            rating[user.candidate_id] = rating[user.candidate_id].concat([job])
+         }
+         
+         return {
+            ...state,
+            rating
+         }
+      }
 
       default:
          return state

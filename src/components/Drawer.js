@@ -52,11 +52,6 @@ class DrawerMenu extends PureComponent {
                   <Text style={{ fontSize: 18, color: 'gray', marginLeft: 20, fontWeight: '500', fontFamily: fontFamily, }}>Saved Company</Text>
                </TouchableOpacity>
 
-               <TouchableOpacity style={styles.perRow}>
-                  <Icon name='search' size={24} color={mainColor} />
-                  <Text style={{ fontSize: 18, color: 'gray', marginLeft: 20, fontWeight: '500', fontFamily: fontFamily, }}>Search Jobs</Text>
-               </TouchableOpacity>
-
                <TouchableOpacity style={styles.perRow}
                   onPress={this.userInfor}
                >
@@ -114,10 +109,6 @@ class DrawerMenu extends PureComponent {
       } else {
          alert('Bạn chưa đăng nhập!')
       }
-   }
-
-   searchJobs = () => {
-      this.props.closeMenu()
    }
 
    userInfor = () => {

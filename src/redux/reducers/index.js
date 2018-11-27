@@ -8,7 +8,7 @@ import JobSolutions from './jobSolutions';
 const persistConfig = {
    key: 'root',
    storage: storage,
-   whitelist: ['savedJobs', 'savedCompany', 'user', 'userIntro']
+   whitelist: ['savedJobs', 'savedCompany', 'user', 'userIntro', 'rating']
 }
 
 const persistedReducer = persistReducer(persistConfig, JobSolutions)

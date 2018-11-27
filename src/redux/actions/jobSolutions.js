@@ -124,3 +124,24 @@ export const savedUserIntroFailed = () => {
       type: types.SAVEDUSERINTRO_FAILED
    }
 }
+
+// send Rating
+export const sendRating = (data) => {
+   return {
+      type: types.SENDRATING,
+      payload: data
+   }
+}
+
+export const sendRatingSuccess = (data) => {
+   return {
+      type: types.SENDRATING_SUCCESS,
+      payload: data
+   }
+}
+
+export const sendRatingFailed = () => {
+   return {
+      type: types.SENDRATING_FAILED
+   }
+}

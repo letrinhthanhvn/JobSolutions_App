@@ -5,7 +5,8 @@ import {
    FlatList,
    TouchableOpacity,
    StyleSheet,
-   Alert
+   Alert,
+   Dimensions
 } from 'react-native';
 import { connect } from 'react-redux';
 import ButtonIcon from '../components/ButtonIcon';
@@ -13,6 +14,8 @@ import { Actions } from 'react-native-router-flux';
 import moment from 'moment';
 import { savedJob } from '../redux/actions/jobSolutions';
 import { mainColor } from '../common/colorBG';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
 class SavedJobs extends PureComponent {
 
    constructor(props) {
@@ -138,10 +141,18 @@ const styles = StyleSheet.create({
       color: 'white'
    },
    rowStyle: {
-      width: '100%', height: 100,
+      width: SCREEN_WIDTH - 10, height: 100,
       paddingLeft: 10,
-      borderBottomColor: 'rgba(0, 0, 0, 0.1)',
-      borderBottomWidth: 8, paddingTop: 3
+         paddingTop: 3,
+         backgroundColor: 'white',
+         marginBottom: 8,
+         shadowOffset: { width: 0, height: 2 },
+         shadowOpacity: 0.8,
+         shadowRadius: 2,
+         elevation: 1,
+         marginLeft: 5,
+         marginRight: 5,
+         marginTop: 5,
    },
    viewSalary: {
       width: '100%',

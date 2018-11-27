@@ -7,13 +7,15 @@ import {
    StyleSheet,
    FlatList,
    TouchableOpacity,
-   Alert
+   Alert,
+   Dimensions
 } from 'react-native';
 import Header from '../components/header';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ButtonIcon from '../components/ButtonIcon';
 import { Actions } from 'react-native-router-flux';
 import { savedCompanyFunc } from '../redux/actions/jobSolutions';
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class SavedCompany extends PureComponent {
 
@@ -57,7 +59,7 @@ class SavedCompany extends PureComponent {
                   onPress={() => this.deleteSavedJob(item)}
                />
             </View>
-            <View style={{ height: 5, backgroundColor: 'rgba(0, 0, 0, 0.1)', position: "absolute", bottom: 0, left: 0, right: 0 }}></View>
+            
          </TouchableOpacity>
       )
    }
@@ -106,7 +108,18 @@ const styles = StyleSheet.create({
 
    companyRow: {
       height: 105,
-      width: '100%',
+      width: SCREEN_WIDTH - 10,
+      paddingLeft: 10,
+         paddingTop: 3,
+         backgroundColor: 'white',
+         marginBottom: 8,
+         shadowOffset: { width: 0, height: 2 },
+         shadowOpacity: 0.8,
+         shadowRadius: 2,
+         elevation: 1,
+         marginLeft: 5,
+         marginRight: 5,
+         marginTop: 5,
    },
 
    text: {

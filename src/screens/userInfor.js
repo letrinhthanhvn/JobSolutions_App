@@ -7,7 +7,8 @@ import {
    Dimensions,
    TouchableOpacity,
    TextInput,
-   Alert
+   Alert,
+   ActivityIndicator
 } from 'react-native';
 import Header from '../components/header';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -31,7 +32,8 @@ class UserInfor extends PureComponent {
          degree: null,
          address: null,
          jobIntroduce: null,
-         isEdited: false
+         isEdited: false,
+         isLoading: false
       }
    }
 
@@ -84,7 +86,11 @@ class UserInfor extends PureComponent {
                         <Icon name='edit' color='green' size={18} />
                      </View>
                      :
-                     null
+                     !userIntroCurrent.email ?
+                        <View style={{ position: 'absolute', top: 5, right: 5, width: 20, height: 20, }}>
+                           <Icon name='perm-device-information' size={18} color='orange' />
+                        </View>
+                        : null
                }
                <Icon name='email' size={50} color='#9AC230' />
                <Text style={styles.headerText}>Email</Text>
@@ -92,15 +98,7 @@ class UserInfor extends PureComponent {
                {
                   !this.state.isEdited ?
                      <Text
-                        style={{ height: 45, width: '75%', paddingLeft: 10, color: 'black', paddingTop: 10 }}
-                     // onChangeText={(text) => this.setState({ email: text })}
-                     // value="hello"
-                     // value={userIntroCurrent['email']}
-                     // style={styles.typeMusicText}
-                     // returnKeyType='done'
-                     // autoCorrect={false}
-                     // selectionColor='black'
-                     // underlineColorAndroid='transparent'
+                        style={{ height: 45, width: '75%', paddingLeft: 10, color: 'black', paddingTop: 10, textAlign: 'center' }}
                      >{userIntroCurrent['email']}</Text> :
                      <TextInput
                         style={{ height: 45, width: '75%', paddingLeft: 10, color: 'black' }}
@@ -108,22 +106,10 @@ class UserInfor extends PureComponent {
                         placeholderTextColor='gray'
                         onChangeText={(text) => this.setState({ email: text })}
                         value={this.state.email}
-                        // style={styles.typeMusicText}
                         returnKeyType='done'
                         autoCorrect={false}
                         selectionColor='black'
                         underlineColorAndroid='transparent'
-                     // onSubmitEditing={() => {
-                     //    if (this.state.text === '') {
-                     //       //  alert('Vui lòng nhập tên thiết bị!')
-                     //    }
-                     //    else {
-                     //       WifiAudio.rename(this.props.ip, this.state.text)
-                     //       this.props.onBack(this.state.text)
-                     //       Actions.pop()
-                     //    }
-                     // }}
-                     // maxLength={20}
                      />
                }
             </TouchableOpacity>
@@ -134,23 +120,18 @@ class UserInfor extends PureComponent {
                         <Icon name='edit' color='green' size={18} />
                      </View>
                      :
-                     null
+                     !userIntroCurrent.phone ?
+                        <View style={{ position: 'absolute', top: 5, right: 5, width: 20, height: 20, }}>
+                           <Icon name='perm-device-information' size={18} color='orange' />
+                        </View>
+                        : null
                }
                <Icon name='phone' size={50} color='#9AC230' />
                <Text style={styles.headerText}>Phone</Text>
-               {/* <Text style={[styles.contentText, { color: 'rgba(0, 0, 0, 0.7)' }]}>0966618558</Text> */}
                {
                   !this.state.isEdited ?
                      <Text
-                        style={{ height: 45, width: '75%', paddingLeft: 10, color: 'black', paddingTop: 10 }}
-                     // onChangeText={(text) => this.setState({ email: text })}
-                     // value="hello"
-                     // value={userIntroCurrent['email']}
-                     // style={styles.typeMusicText}
-                     // returnKeyType='done'
-                     // autoCorrect={false}
-                     // selectionColor='black'
-                     // underlineColorAndroid='transparent'
+                        style={{ height: 45, width: '75%', paddingLeft: 10, color: 'black', paddingTop: 10, textAlign: 'center' }}
                      >{userIntroCurrent['phone']}</Text> :
                      <TextInput
                         style={{ height: 45, width: '75%', paddingLeft: 10, color: 'black' }}
@@ -158,21 +139,10 @@ class UserInfor extends PureComponent {
                         placeholderTextColor='gray'
                         onChangeText={(text) => this.setState({ phone: text })}
                         value={this.state.phone}
-                        // style={styles.typeMusicText}
                         returnKeyType='done'
                         autoCorrect={false}
                         selectionColor='black'
                         underlineColorAndroid='transparent'
-                        // onSubmitEditing={() => {
-                        //    if (this.state.text === '') {
-                        //       //  alert('Vui lòng nhập tên thiết bị!')
-                        //    }
-                        //    else {
-                        //       WifiAudio.rename(this.props.ip, this.state.text)
-                        //       this.props.onBack(this.state.text)
-                        //       Actions.pop()
-                        //    }
-                        // }}
                         maxLength={11}
                      />
                }
@@ -193,7 +163,11 @@ class UserInfor extends PureComponent {
                         <Icon name='edit' color='green' size={18} />
                      </View>
                      :
-                     null
+                     !userIntroCurrent.degree ?
+                        <View style={{ position: 'absolute', top: 5, right: 5, width: 20, height: 20, }}>
+                           <Icon name='perm-device-information' size={18} color='orange' />
+                        </View>
+                        : null
                }
                <IconFont name='book' size={50} color='#9AC230' />
                <Text style={styles.headerText}>Trình độ học vấn</Text>
@@ -201,15 +175,7 @@ class UserInfor extends PureComponent {
                {
                   !this.state.isEdited ?
                      <Text
-                        style={{ height: 45, width: '75%', paddingLeft: 10, color: 'black', paddingTop: 10 }}
-                     // onChangeText={(text) => this.setState({ email: text })}
-                     // value="hello"
-                     // value={userIntroCurrent['email']}
-                     // style={styles.typeMusicText}
-                     // returnKeyType='done'
-                     // autoCorrect={false}
-                     // selectionColor='black'
-                     // underlineColorAndroid='transparent'
+                        style={{ height: 45, width: '75%', paddingLeft: 10, color: 'black', paddingTop: 10, textAlign: 'center' }}
                      >{userIntroCurrent['degree']}</Text> :
                      <TextInput
                         style={{ height: 45, width: '75%', paddingLeft: 10, color: 'black' }}
@@ -222,16 +188,6 @@ class UserInfor extends PureComponent {
                         autoCorrect={false}
                         selectionColor='black'
                         underlineColorAndroid='transparent'
-                        // onSubmitEditing={() => {
-                        //    if (this.state.text === '') {
-                        //       //  alert('Vui lòng nhập tên thiết bị!')
-                        //    }
-                        //    else {
-                        //       WifiAudio.rename(this.props.ip, this.state.text)
-                        //       this.props.onBack(this.state.text)
-                        //       Actions.pop()
-                        //    }
-                        // }}
                         maxLength={20}
                      />
                }
@@ -243,23 +199,18 @@ class UserInfor extends PureComponent {
                         <Icon name='edit' color='green' size={18} />
                      </View>
                      :
-                     null
+                     !userIntroCurrent.address ?
+                        <View style={{ position: 'absolute', top: 5, right: 5, width: 20, height: 20, }}>
+                           <Icon name='perm-device-information' size={18} color='orange' />
+                        </View>
+                        : null
                }
                <Icon name='home' size={50} color='#9AC230' />
                <Text style={styles.headerText}>Địa chỉ</Text>
-               {/* <Text style={[styles.contentText, { color: 'rgba(0, 0, 0, 0.7)' }]}>Hà Nội</Text> */}
                {
                   !this.state.isEdited ?
                      <Text
-                        style={{ height: 45, width: '75%', paddingLeft: 10, color: 'black', paddingTop: 10 }}
-                     // onChangeText={(text) => this.setState({ email: text })}
-                     // value="hello"
-                     // value={userIntroCurrent['email']}
-                     // style={styles.typeMusicText}
-                     // returnKeyType='done'
-                     // autoCorrect={false}
-                     // selectionColor='black'
-                     // underlineColorAndroid='transparent'
+                        style={{ height: 45, width: '75%', paddingLeft: 10, color: 'black', paddingTop: 10, textAlign: 'center' }}
                      >{userIntroCurrent['address']}</Text> :
                      <TextInput
                         style={{ height: 45, width: '75%', paddingLeft: 10, color: 'black' }}
@@ -267,21 +218,10 @@ class UserInfor extends PureComponent {
                         placeholderTextColor='gray'
                         onChangeText={(text) => this.setState({ address: text })}
                         value={this.state.address}
-                        // style={styles.typeMusicText}
                         returnKeyType='done'
                         autoCorrect={false}
                         selectionColor='black'
                         underlineColorAndroid='transparent'
-                        // onSubmitEditing={() => {
-                        //    if (this.state.text === '') {
-                        //       //  alert('Vui lòng nhập tên thiết bị!')
-                        //    }
-                        //    else {
-                        //       WifiAudio.rename(this.props.ip, this.state.text)
-                        //       this.props.onBack(this.state.text)
-                        //       Actions.pop()
-                        //    }
-                        // }}
                         maxLength={20}
                      />
                }
@@ -294,19 +234,23 @@ class UserInfor extends PureComponent {
       const { userIntroCurrent } = this.props
       return (
          <TouchableOpacity style={[styles.containerIntroduce, { padding: 10 }]}>
+            {
+               this.state.isEdited ?
+                  <View style={{ position: 'absolute', top: 5, right: 5, width: 20, height: 20, }}>
+                     <Icon name='edit' color='green' size={18} />
+                  </View>
+                  :
+                  !userIntroCurrent.career_goal ?
+                     <View style={{ position: 'absolute', top: 5, right: 5, width: 20, height: 20, }}>
+                        <Icon name='perm-device-information' size={18} color='orange' />
+                     </View>
+                     : null
+            }
             <Text style={[styles.headerText]}>Giới thiệu bản thân</Text>
             {
                !this.state.isEdited ?
                   <Text
                      style={{ height: 45, width: '75%', paddingLeft: 10, color: 'black', paddingTop: 10 }}
-                  // onChangeText={(text) => this.setState({ email: text })}
-                  // value="hello"
-                  // value={userIntroCurrent['email']}
-                  // style={styles.typeMusicText}
-                  // returnKeyType='done'
-                  // autoCorrect={false}
-                  // selectionColor='black'
-                  // underlineColorAndroid='transparent'
                   >{userIntroCurrent['career_goal']}</Text> :
                   <TextInput
                      style={{ height: 45, width: '75%', paddingLeft: 10, color: 'black' }}
@@ -319,17 +263,6 @@ class UserInfor extends PureComponent {
                      autoCorrect={false}
                      selectionColor='black'
                      underlineColorAndroid='transparent'
-                  // onSubmitEditing={() => {
-                  //    if (this.state.text === '') {
-                  //       //  alert('Vui lòng nhập tên thiết bị!')
-                  //    }
-                  //    else {
-                  //       WifiAudio.rename(this.props.ip, this.state.text)
-                  //       this.props.onBack(this.state.text)
-                  //       Actions.pop()
-                  //    }
-                  // }}
-                  // maxLength={20}
                   />
             }
          </TouchableOpacity>
@@ -354,38 +287,43 @@ class UserInfor extends PureComponent {
    }
 
    render() {
+      console.log('user infor ::::::::', this.props.userIntroCurrent)
       return (
          <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.1)' }}>
             <Header title='User informations' viewRight={true} />
-            <KeyboardScroll style={{ flex: 1, }}>
-               <ScrollView style={styles.container}>
-                  {
-                     this.renderHeader()
-                  }
-                  {
-                     // this.renderSalary()
-                  }
-                  <View style={styles.sendUserIntro}>
-                     <Button style={styles.sendUserIntroBtn}
-                        onPress={this.updateInfor}
-                     >
+            {
+               this.state.isLoading ?
+                  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 100, backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
+                     <ActivityIndicator size="large" color='white' style={{ flex: 1 }} />
+                  </View>:
+                  null
+            }
+                  <KeyboardScroll style={{ flex: 1, }}>
+                     <ScrollView style={styles.container}>
                         {
-                           this.state.isEdited ? <Text style={{ color: 'white' }}>Cập nhật thông tin</Text> : <Text style={{ color: 'white' }}>Sửa thông tin</Text>
+                           this.renderHeader()
                         }
+                        <View style={styles.sendUserIntro}>
+                           <Button style={styles.sendUserIntroBtn}
+                              onPress={this.updateInfor}
+                           >
+                              {
+                                 this.state.isEdited ? <Text style={{ color: 'white' }}>Cập nhật thông tin</Text> : <Text style={{ color: 'white' }}>Sửa thông tin</Text>
+                              }
 
-                     </Button>
-                  </View>
-                  {
-                     this.renderEmailPhone()
-                  }
-                  {
-                     this.renderDegreeAddress()
-                  }
-                  {
-                     this.renderIntroduce()
-                  }
-               </ScrollView>
-            </KeyboardScroll>
+                           </Button>
+                        </View>
+                        {
+                           this.renderEmailPhone()
+                        }
+                        {
+                           this.renderDegreeAddress()
+                        }
+                        {
+                           this.renderIntroduce()
+                        }
+                     </ScrollView>
+                  </KeyboardScroll>
          </View>
       );
    }
@@ -411,10 +349,16 @@ class UserInfor extends PureComponent {
                {
                   text: 'OK',
                   onPress: () => {
-                     this.props.savedUserIntro({ candidate_id: this.props.candidate_id, phone: this.state.phone, career_goal: this.state.jobIntroduce, email: this.state.email, degree: this.state.degree, address: this.state.address })
                      this.setState({
-                        isEdited: false
+                        isLoading: true
                      })
+                     setTimeout(() => {
+                        this.props.savedUserIntro({ candidate_id: this.props.candidate_id, phone: this.state.phone, career_goal: this.state.jobIntroduce, email: this.state.email, degree: this.state.degree, address: this.state.address })
+                        this.setState({
+                           isEdited: false,
+                           isLoading: false
+                        })
+                     }, 1200)
                   }
                },
             ],
@@ -497,7 +441,7 @@ const styles = StyleSheet.create({
       backgroundColor: "rgba(255, 255, 255, 0.7)",
    },
    containerIntroduce: {
-      height: 100,
+      height: 200,
       margin: 10,
       backgroundColor: "rgba(255, 255, 255, 0.7)",
    },

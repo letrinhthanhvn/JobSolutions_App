@@ -31,7 +31,7 @@ class CompanyDetail extends PureComponent {
       ).then((res) => res.json()).catch((error) => {
          console.error(error);
       });
-      if (res.status == "SUCCESS") {
+      if (res) {
          console.log('resfasdf', res)
          this.setState({
             companyInfor: res.company,

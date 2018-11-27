@@ -5,7 +5,7 @@ import {
    FlatList,
    TouchableOpacity,
    StyleSheet,
-   TouchableHightLight
+   Dimensions
 } from 'react-native';
 import { connect } from 'react-redux';
 import ButtonIcon from '../components/ButtonIcon';
@@ -15,6 +15,15 @@ import { mainColor } from '../common/colorBG';
 import StarRating from 'react-native-star-rating';
 import Search from 'react-native-search-box';
 import _ from 'lodash';
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+
+var radio_props = [
+   { label: 'Tên Job', value: 0 },
+   { label: 'Tên công ty', value: 1 },
+   { label: 'Địa điểm', value: 2 }
+];
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
 class ListJobs extends PureComponent {
 
    constructor(props) {
@@ -22,7 +31,8 @@ class ListJobs extends PureComponent {
 
       this.state = {
          listJobs: [],
-         isRefresh: false
+         isRefresh: false,
+         typeSearch: 0
       }
    }
 
@@ -55,8 +65,8 @@ class ListJobs extends PureComponent {
             <View style={[styles.textPerField, { marginTop: 2 }]}>
                <Text style={[styles.textPerField, styles.deadline]}>OutOfDate: {moment(item.deadline).format('YYYY-MM-DD')}</Text>
             </View>
-            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-               {/* <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 1)', fontSize: 18 }]}>Danh gia: 4.7/5</Text> */}
+            {/* <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+               <Text style={[styles.textPerField, { color: 'rgba(0, 0, 0, 1)', fontSize: 18 }]}>Danh gia: 4.7/5</Text>
                <StarRating
                   disabled={false}
                   maxStars={5}
@@ -66,9 +76,9 @@ class ListJobs extends PureComponent {
                   iconSet={'Ionicons'}
                   rating={4}
                   fullStarColor={mainColor}
-               // selectedStar={(rating) => this.onStarRatingPress(rating)}
+               selectedStar={(rating) => this.onStarRatingPress(rating)}
                />
-            </View>
+            </View> */}
          </TouchableOpacity>
       )
    }
@@ -95,10 +105,23 @@ class ListJobs extends PureComponent {
             {
                this.renderTop()
             }
+            <View style={{ width: '100%', height: 50, alignItems: "center", justifyContent: 'center' }}>
+               <RadioForm
+                  radio_props={radio_props}
+                  initial={0}
+                  formHorizontal={true}
+                  labelHorizontal={true}
+                  buttonColor={'#2196f3'}
+                  animation={true}
+                  onPress={(value) => { this.setState({ typeSearch: value }) }}
+               />
+            </View>
             <Search
                ref="search_box"
                onChangeText={(text) => this.onChangeText(text)}
-               onSearch={(text) => this.search(text)}
+               onSearch={(text) => {
+                  this.state.typeSearch == 0 ? this.searchByJobName(text) : this.state.typeSearch == 1 ? this.searchByCompanyName(text) : this.searchByAddressName(text)
+               }}
             />
             <FlatList
                data={listJobs}
@@ -173,18 +196,62 @@ class ListJobs extends PureComponent {
    onChangeText = (text) => {
       console.log('text', text)
    }
- 
+
    // search
-   search = async (text) => {
-      let jobs =  this.state.listJobs.filter(job => job.work_name.toLowerCase().includes(text.toLowerCase()))
-      setTimeout(() => {
-         // console.log('jobsSearch,::::::', jobs)
-         if (jobs.length > 0) {
-            Actions.resultSearch({ listJobsSearch: jobs })
-         } else {
-            alert('Khong tim thay cong viec can tim!')
+   searchByJobName = async (text) => {
+      // let jobs =  this.state.listJobs.filter(job => job.work_name.toLowerCase().includes(text.toLowerCase()))
+      // setTimeout(() => {
+      //    // console.log('jobsSearch,::::::', jobs)
+      //    if (jobs.length > 0) {
+      //       Actions.resultSearch({ listJobsSearch: jobs })
+      //    } else {
+      //       alert('Khong tim thay cong viec can tim!')
+      //    }
+      // }, 200)
+      let res = await fetch('http://localhost:3000/recruitment/search?industry_id=' + this.props.id + '&work_name=' + text, {
+         method: 'GET',
+         headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
          }
-      }, 200)
+      }).then((res) => res.json())
+      if (res.status == 'SUCCESS') {
+         Actions.resultSearch({ listJobsSearch: res.results })
+      } else {
+         alert("Khong co ket qua tim kiem!")
+      }
+   }
+
+   searchByCompanyName = async (text) => {
+      let res = await fetch('http://localhost:3000/recruitment/search?industry_id=' + this.props.id + '&company_name=' + text + '&limit=5&offset=0', {
+         // method: 'GET',
+         // headers: {
+         //    'Accept': 'application/json',
+         //    'Content-Type': 'application/json'
+         // }
+      }).then((res) => res.json())
+      if (res.status == 'SUCCESS') {
+         Actions.resultSearch({ listJobsSearch: res.results })
+      } else {
+         alert("Khong co ket qua tim kiem!")
+      }
+   }
+
+   searchByAddressName = async (text) => {
+      // http://localhost:3000/recruitment/search?industry_id=' this.props.id + '&location=' + text + '%20noi&limit=5&offset=0'
+
+      let res = await fetch('http://localhost:3000/recruitment/search?industry_id=' + this.props.id + '&location=' + text + '&limit=5&offset=0', {
+         // method: 'GET',
+         // headers: {
+         //    'Accept': 'application/json',
+         //    'Content-Type': 'application/json'
+         // }
+      }).then((res) => res.json())
+      if (res.status == 'SUCCESS') {
+         Actions.resultSearch({ listJobsSearch: res.results })
+      } else {
+         alert("Khong co ket qua tim kiem!")
+      }
    }
 
 }
@@ -205,11 +272,18 @@ const styles = StyleSheet.create({
    },
 
    rowStyle: {
-      width: '100%', height: 185,
+      width: '100%', height: 150,
       paddingLeft: 10,
       paddingTop: 3,
       backgroundColor: 'white',
-      marginBottom: 8
+      marginBottom: 8,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.8,
+      shadowRadius: 2,
+      elevation: 1,
+      marginLeft: 5,
+      marginRight: 5,
+      marginTop: 10,
    },
 
    viewSalary: {

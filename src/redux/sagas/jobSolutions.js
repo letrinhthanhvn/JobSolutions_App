@@ -10,7 +10,9 @@ import {
    getCandidateIdLocalSuccess,
    getCandidateIdLocalFailed,
    savedUserIntroSuccess,
-   savedUserIntroFailed
+   savedUserIntroFailed,
+   sendRatingSuccess,
+   sendRatingFailed
 } from '../actions/jobSolutions';
 import { AsyncStorage } from 'react-native';
 import { Actions } from 'react-native-router-flux';
@@ -162,5 +164,36 @@ export function* watchSavedUserInfor() {
    yield takeLatest(types.SAVEDUSERINTRO, sagaSavedUserIntro)
 }
 
+/**
+* 
+*/
+function* sagaSendRating(action) {
+   try {
+      let res = yield fetch('http://localhost:3000/recruitment/rate', {
+         method: 'POST',
+         headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+         },
+         body: JSON.stringify({
+            recruitment_id: action.payload.recruitment_id,
+            point: action.payload.point
+         })
+      }).then((res) => res.json())
+      if (res.status == "SUCCESS") {
+         yield put(sendRatingSuccess({recruitment_id: action.payload.recruitment_id,
+            point: action.payload.point}))
+      } else {
+         yield put(sendRatingFailed())
+      }
+   } catch (e) {
+      console.log('Catche SendRating', e)
+      yield put(sendRatingFailed())
+   }
+}
+
+export function* watchSendRating() {
+   yield takeLatest(types.SENDRATING, sagaSendRating)
+}
 
 
